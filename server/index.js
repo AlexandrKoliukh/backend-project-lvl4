@@ -15,6 +15,7 @@ import Pug from 'pug';
 import i18next from 'i18next';
 import ru from './locales/ru.js';
 import webpackConfig from '../webpack.config.js';
+import Rollbar from 'rollbar';
 
 import addRoutes from './routes/index.js';
 import getHelpers from './helpers/index.js';
@@ -69,6 +70,18 @@ const setupLocalization = () => {
     });
 };
 
+const setUpRollbar = (app) => {
+  const rollbar = new Rollbar({
+    accessToken: process.env.ROLLBAR_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+  });
+
+  app.setErrorHandler((error, request, reply) => {
+    rollbar.error(`Error: ${error}`, request, reply);
+  })
+};
+
 const addHooks = (app) => {
   app.decorateRequest('currentUser', null);
   app.decorateRequest('signedIn', false);
@@ -114,6 +127,7 @@ export default () => {
   setupLocalization();
   setUpViews(app);
   setUpStaticAssets(app);
+  setUpRollbar(app);
   addRoutes(app);
   addHooks(app);
 
