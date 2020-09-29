@@ -13,9 +13,9 @@ import fastifyMethodOverride from 'fastify-method-override';
 import fastifyObjectionjs from 'fastify-objectionjs';
 import Pug from 'pug';
 import i18next from 'i18next';
+import Rollbar from 'rollbar';
 import ru from './locales/ru.js';
 import webpackConfig from '../webpack.config.js';
-import Rollbar from 'rollbar';
 
 import addRoutes from './routes/index.js';
 import getHelpers from './helpers/index.js';
@@ -59,15 +59,14 @@ const setUpStaticAssets = (app) => {
 };
 
 const setupLocalization = () => {
-  i18next
-    .init({
-      lng: 'ru',
-      fallbackLng: 'en',
-      debug: isDevelopment,
-      resources: {
-        ru,
-      },
-    });
+  i18next.init({
+    lng: 'ru',
+    fallbackLng: 'en',
+    debug: isDevelopment,
+    resources: {
+      ru,
+    },
+  });
 };
 
 const setUpRollbar = (app) => {
@@ -79,7 +78,7 @@ const setUpRollbar = (app) => {
 
   app.setErrorHandler((error, request, reply) => {
     rollbar.error(`Error: ${error}`, request, reply);
-  })
+  });
 };
 
 const addHooks = (app) => {
@@ -89,7 +88,9 @@ const addHooks = (app) => {
   app.addHook('preHandler', async (req) => {
     const userId = req.session.get('userId');
     if (userId) {
-      req.currentUser = await app.objection.models.user.query().findById(userId);
+      req.currentUser = await app.objection.models.user
+        .query()
+        .findById(userId);
       req.signedIn = true;
     }
   });
