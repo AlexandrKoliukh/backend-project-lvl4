@@ -1,3 +1,2 @@
 // @ts-check
-import 'bootstrap';
-import '../scss/index.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
