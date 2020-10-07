@@ -1,6 +1,7 @@
 // @ts-check
 
 import i18next from 'i18next';
+import _ from 'lodash';
 
 export default (app) => {
   app
@@ -25,5 +26,25 @@ export default (app) => {
         reply.render('users/new', { user: req.body.object, errors: data });
         return reply;
       }
+    })
+    .get('/users/:id', { name: 'editUser' }, async (req, reply) => {
+      const paramsUserId = _.toNumber(req.params.id);
+      const sessionUserId = _.toNumber(reply.request.session.get('userId'));
+
+      if (paramsUserId !== sessionUserId) {
+        console.log(paramsUserId, sessionUserId);
+      }
+
+      const user = await app.objection.models.user
+        .query()
+        .where('id', '=', sessionUserId);
+
+      console.log(user);
+
+      const keys = _.keys(user).filter(
+        (key) => !['passwordDigest'].includes(key)
+      );
+
+      return reply.render('users/edit', { user, keys });
     });
 };

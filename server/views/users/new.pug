@@ -1,10 +1,14 @@
 extends ../layouts/application.pug
 
 block header
-  = t('views.users.new.signUp')
+  div.text-center
+    = t('views.users.new.signUp')
 
 block content
-  +formFor()(action=route('users') method='post')
-    +input(user, 'email', errors)(type="text")
-    +input(user, 'password', errors)(type="password")
-    +submit(user)(value=t('views.users.new.submit'))
+  div.w-50.mx-auto
+    +formFor()(action=route('users') method='post')
+      +input(user, 'email', errors)(type="text", required="required")
+      +input(user, 'password', errors)(type="password", required="required")
+      +input(user, 'firstName', errors)(type="text", required="required")
+      +input(user, 'lastName', errors)(type="text", required="required")
+      +submit(user)(value=t('views.users.new.submit')).w-100

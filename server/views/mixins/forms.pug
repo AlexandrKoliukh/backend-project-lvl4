@@ -7,7 +7,7 @@ mixin formFor(entity = null)
 mixin input(entity, propertyName, errors = [])
   - error = _.get(errors, propertyName)
   .form-group(class=(errors[propertyName] && 'has-danger'))
-    label= propertyName
+    label= _.startCase(propertyName)
     input(
       name=getInputName(entity, propertyName)
       class='form-control'
@@ -24,3 +24,53 @@ mixin buttonTo(action, method)
   form(action=action, method="post")
     input(name="_method" type="hidden" value=method)
     input(type='submit')&attributes(attributes)
+
+mixin inputToChangeUserData(entity, propertyName, errors = [])
+  - error = errors.find((error) => error.property === propertyName)
+  .form-group(class=(errors[propertyName] && 'has-danger'))
+    label=t(`views.user.${propertyName}`)
+    input.text-center(
+      name=getInputName(entity, propertyName)
+      class='form-control'
+      value=_.get(entity, propertyName, '')
+    )&attributes(attributes)
+    if error
+      .form-control-feedback= Object.values(error.constraints).join('. ')
+
+mixin submitUpdate(form = null)
+  input.btn.btn-outline-primary(type='submit')&attributes(attributes)
+
+mixin buttonDeleteUser()
+  button.btn.btn-outline-danger(
+    type='button'
+    data-toggle='modal'
+    data-target='#deleteUser'
+  )= t('views.user.delete.delete')
+  #deleteUser.modal.fade(
+    tabindex='-1'
+    role='dialog'
+    aria-labelledby='deleteUserLabel'
+    aria-hidden='true')
+    .modal-dialog(role='document')
+      .modal-content
+        .modal-header
+          .container
+            h5#deleteUserLabel.modal-title.text-center= t('views.user.delete.deleteTitle')
+        .modal-body= t('views.user.delete.deleteMessage')
+        .modal-footer.justify-content-between
+          button.btn.btn-primary(
+            type='button'
+            data-dismiss='modal'
+          )= t('views.user.delete.save')
+          form(
+            action=`/users/${currUserId}`
+            method='post'
+          )
+            input(
+              name="_method"
+              type="hidden"
+              value='DELETE'
+            )
+            button.btn.btn-danger(
+              type='submit'
+            )=t('views.user.delete.confirmDelete')

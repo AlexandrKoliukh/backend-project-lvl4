@@ -1,9 +1,10 @@
 include ../mixins/forms.pug
+include ../mixins/common.pug
 
 doctype html
 html(lang="en").h-100
   head
-    title Hexlet Fastify Boilerplate
+    title Tasks Manager
     script(src=assetPath('main.js'))
     link(href=assetPath('main.css'))
   body.h-100.d-flex.flex-column
@@ -17,6 +18,10 @@ html(lang="en").h-100
             a.nav-link(href=route('users'))= t('layouts.application.users')
         ul.navbar-nav
           if reply.request.signedIn
+            li.nav-item
+              a.nav-link(
+                href=`/users/${currUserId}`
+              ) !{reply.request.session.get('email')}
             li.nav-item
               +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
           else
@@ -33,8 +38,3 @@ html(lang="en").h-100
       h1.my-4
         block header
       block content
-
-    footer.footer.mt-100
-      .container.my-5.pt-4.border-top
-        a(target="_blank" href="https://ru.hexlet.io") Hexlet
-
