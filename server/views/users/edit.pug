@@ -1,0 +1,47 @@
+extends ../layouts/application.pug
+
+block content
+    .container.col-4.justify-content-center
+        .d-flex.flex-column
+            h3.mb-3.font-weight-normal.text-center
+                = t('views.user.profile')
+            form(action=`/users/${currUserId}`, method='post')
+                input(
+                    name="_method"
+                    type="hidden"
+                    value='patch'
+                )
+                each key in keys
+                    +input(user, key)(type='!{key}')
+                +input(user, 'password')(name="password" type="password" placeholder=t('views.user.passwordPlaceholder'))
+                +submit.mb-3(value=t('buttons.save'))
+
+            input.btn.btn-outline-danger(
+                type='button' value=t('buttons.delete')
+                data-toggle='modal' data-target='#deleteUser'
+                )
+
+            #deleteUser.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteUserLabel' aria-hidden='true')
+                .modal-dialog(role='document')
+                    .modal-content
+                        .modal-header
+                            .container
+                                h5#deleteUserLabel.modal-title.text-center= t('views.user.delete.delete')
+                        .modal-body= t('views.user.delete.deleteConfirm')
+                        .modal-footer.justify-content-between
+                            button.btn.btn-primary(
+                                type='button'
+                                data-dismiss='modal'
+                            )= t('buttons.cancel')
+                            form(
+                                action=`/users/${currUserId}`
+                                method='post'
+                            )
+                                input(
+                                    name="_method"
+                                    type="hidden"
+                                    value='DELETE'
+                                )
+                                button.btn.btn-danger(
+                                    type='submit'
+                                )=t('buttons.delete')
