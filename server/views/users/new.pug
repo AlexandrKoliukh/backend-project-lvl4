@@ -2,7 +2,7 @@ extends ../layouts/application.pug
 
 block header
   div.text-center
-    = t('views.users.new.signUp')
+    = t('views.user.new.signUp')
 
 block content
   div.w-50.mx-auto
@@ -11,4 +11,4 @@ block content
       +input(user, 'password', errors)(type="password", required="required")
       +input(user, 'firstName', errors)(type="text", required="required")
       +input(user, 'lastName', errors)(type="text", required="required")
-      +submit(user)(value=t('views.users.new.submit')).w-100
+      +submit(user)(value=t('views.user.new.submit'))

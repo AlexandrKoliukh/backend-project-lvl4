@@ -1,7 +1,16 @@
 module.exports = {
   translation: {
     appName: 'Менеджер задач',
+    buttons: {
+      save: 'Сохранить',
+      cancel: 'Отмена',
+      delete: 'Удалить',
+      update: 'Обновить',
+    },
     flash: {
+      errors: {
+        403: 'Недостаточно прав',
+      },
       session: {
         create: {
           success: 'Вы залогинены',
@@ -11,10 +20,17 @@ module.exports = {
           success: 'Вы разлогинены',
         },
       },
-      users: {
+      user: {
         create: {
           error: 'Не удалось зарегистрировать',
           success: 'Пользователь успешно зарегистрирован',
+        },
+        delete: {
+          success: 'Пользователь был удален',
+        },
+        update: {
+          success: 'Данные пользователя были обновлены',
+          error: 'Ошибка обновления',
         },
       },
     },
@@ -33,7 +49,7 @@ module.exports = {
           submit: 'Войти',
         },
       },
-      users: {
+      user: {
         id: 'ID',
         email: 'Email',
         createdAt: 'Дата создания',
@@ -45,6 +61,15 @@ module.exports = {
           submit: 'Сохранить',
           signUp: 'Регистрация',
         },
+        profile: 'Профиль',
+        delete: {
+          delete: 'Удалить аккаунт',
+          deleteConfirm: 'Восстановить аккаунт будет невозможно',
+        },
+        changePassword: {
+          changePassword: 'Обновить пароль',
+        },
+        passwordPlaceholder: 'Новый пароль',
       },
       welcome: {
         index: {

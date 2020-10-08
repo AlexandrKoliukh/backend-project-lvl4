@@ -62,7 +62,7 @@ const setupLocalization = () => {
   i18next.init({
     lng: 'ru',
     fallbackLng: 'en',
-    debug: isDevelopment,
+    debug: false,
     resources: {
       ru,
     },

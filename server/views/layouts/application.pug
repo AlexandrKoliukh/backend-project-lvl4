@@ -5,10 +5,17 @@ doctype html
 html(lang="en").h-100
   head
     title Tasks Manager
+    link(
+      rel='stylesheet'
+      href='https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css'
+      integrity='sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK'
+      crossorigin='anonymous'
+    )
     script(src=assetPath('main.js'))
     link(href=assetPath('main.css'))
+
   body.h-100.d-flex.flex-column
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3
+    nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3.px-3
       a.navbar-brand(href=route('root'))= t('appName')
       button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
         span.navbar-toggler-icon
@@ -38,3 +45,8 @@ html(lang="en").h-100
       h1.my-4
         block header
       block content
+    script(
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"
+      integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD"
+      crossorigin="anonymous"
+    )

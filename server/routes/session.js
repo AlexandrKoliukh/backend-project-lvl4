@@ -2,15 +2,16 @@
 
 import i18next from 'i18next';
 import encrypt from '../lib/secure.js';
+import User from '../models/User';
 
 export default (app) => {
   app
     .get('/session/new', { name: 'newSession' }, (req, reply) => {
-      const signInForm = {};
+      const signInForm = new app.objection.models.user();
       reply.render('session/new', { signInForm });
     })
     .post('/session', { name: 'session' }, async (req, reply) => {
-      const signInForm = req.body.object;
+      const signInForm = req.body.user;
       const user = await app.objection.models.user
         .query()
         .findOne({ email: signInForm.email });
