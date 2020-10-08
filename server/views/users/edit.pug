@@ -13,10 +13,9 @@ block content
                 )
                 each key in keys
                     +input(user, key)(type='!{key}')
-
                 +input(user, 'password')(name="password" type="password" placeholder=t('views.user.passwordPlaceholder'))
-
                 +submit.mb-3(value=t('buttons.save'))
+
             input.btn.btn-outline-danger(
                 type='button' value=t('buttons.delete')
                 data-toggle='modal' data-target='#deleteUser'

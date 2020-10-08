@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/hexlet-boilerplates/fastify-nodejs-application.git#readme",
   "dependencies": {
+    "debug": "^4.2.0",
     "fastify": "^3.1.1",
     "fastify-error-page": "^4.0.0",
     "fastify-flash": "^2.0.2",

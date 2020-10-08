@@ -51,12 +51,9 @@ export default (app) => {
         req.flash('error', i18next.t('flash.errors.403'));
         return reply.redirect(app.reverse('root'));
       }
-      console.log(req.body.user);
 
       try {
-        const newUserData = req.body.user;
-        console.log(newUserData);
-
+        const { password, user: newUserData } = req.body;
         const oldUser = await app.objection.models.user
           .query()
           .findById(sessionUserId);
@@ -64,23 +61,19 @@ export default (app) => {
           if (newUserData[i] === oldUser[i]) return acc;
           return { ...acc, [i]: newUserData[i] };
         }, {});
-        console.log(patchObject);
 
-        const updatedUser = await app.objection.models.user
-          .query()
-          .findById(sessionUserId)
-          .patch(patchObject)
-          .returning('*');
+        if (password) {
+          patchObject.password = password;
+        }
 
-        console.log(updatedUser);
+        const updatedUser = await oldUser.$query().patchAndFetch(patchObject);
 
         req.session.set('email', updatedUser.email);
         req.flash('info', i18next.t('flash.user.update.success'));
       } catch (e) {
-        console.log(e);
         req.flash('error', i18next.t('flash.user.update.error'));
       }
-      return reply.redirect(app.reverse('root'));
+      return reply.redirect(app.reverse('userProfile', { id: sessionUserId }));
     })
     .delete('/users/:id', async (req, reply) => {
       try {

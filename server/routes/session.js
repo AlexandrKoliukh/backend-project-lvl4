@@ -2,7 +2,6 @@
 
 import i18next from 'i18next';
 import encrypt from '../lib/secure.js';
-import User from '../models/User';
 
 export default (app) => {
   app
@@ -18,7 +17,7 @@ export default (app) => {
 
       if (!user || user.passwordDigest !== encrypt(signInForm.password)) {
         req.flash('error', i18next.t('flash.session.create.error'));
-        reply.render('session/new', { signInForm });
+        reply.render('session/new', { signInForm: user });
         return reply;
       }
 
