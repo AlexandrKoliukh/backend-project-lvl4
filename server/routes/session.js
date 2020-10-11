@@ -1,7 +1,6 @@
 // @ts-check
 
 import i18next from 'i18next';
-import encrypt from '../lib/secure.js';
 
 export default (app) => {
   app
@@ -10,14 +9,16 @@ export default (app) => {
       reply.render('session/new', { signInForm });
     })
     .post('/session', { name: 'session' }, async (req, reply) => {
-      const signInForm = req.body.user;
+      const signInForm = await app.objection.models.user.fromJson(
+        req.body.user
+      );
       const user = await app.objection.models.user
         .query()
         .findOne({ email: signInForm.email });
 
-      if (!user || user.passwordDigest !== encrypt(signInForm.password)) {
+      if (!user || user.passwordDigest !== signInForm.passwordDigest) {
         req.flash('error', i18next.t('flash.session.create.error'));
-        reply.render('session/new', { signInForm: user });
+        reply.render('session/new', { signInForm });
         return reply;
       }
 

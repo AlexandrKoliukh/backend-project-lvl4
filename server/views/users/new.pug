@@ -7,8 +7,8 @@ block header
 block content
   div.w-50.mx-auto
     +formFor()(action=route('users') method='post')
-      +input(user, 'email', errors)(type="text", required="required")
-      +input(user, 'password', errors)(type="password", required="required")
+      +input(user, 'email', errors)(type="email", required="required")
+      +input(user, 'password', errors)(type="password", required="required", minlength="3")
       +input(user, 'firstName', errors)(type="text", required="required")
       +input(user, 'lastName', errors)(type="text", required="required")
       +submit(user)(value=t('views.user.new.submit'))

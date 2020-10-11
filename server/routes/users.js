@@ -15,15 +15,15 @@ export default (app) => {
       reply.render('users/new', { user });
     })
     .post('/users', async (req, reply) => {
+      const user = await app.objection.models.user.fromJson(req.body.user);
       try {
-        const user = await app.objection.models.user.fromJson(req.body.user);
         await app.objection.models.user.query().insert(user);
         req.flash('info', i18next.t('flash.user.create.success'));
         reply.redirect(app.reverse('root'));
         return reply;
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.user.create.error'));
-        reply.render('users/new', { user: req.body.object, errors: data });
+        reply.render('users/new', { user, errors: data });
         return reply;
       }
     })
