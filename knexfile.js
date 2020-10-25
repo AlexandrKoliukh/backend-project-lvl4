@@ -9,7 +9,6 @@ const migrations = {
 module.exports = {
   development: {
     client: 'sqlite3',
-    useNullAsDefault: true,
     connection: {
       filename: './database.sqlite',
     },
@@ -18,14 +17,13 @@ module.exports = {
   test: {
     client: 'sqlite3',
     connection: {
-      filename: './database.sqlite',
+      filename: ':memory:',
     },
-    useNullAsDefault: true,
+    debug: true,
     migrations,
   },
   production: {
     client: 'pg',
-    useNullAsDefault: true,
     connection: process.env.DATABASE_URL,
     migrations,
   },
