@@ -44,19 +44,13 @@ export default (app) => {
       return reply.render('users/edit', { user, keys });
     })
     .patch('/users/:id', async (req, reply) => {
-      const paramsUserId = _.toNumber(req.params.id);
-      const sessionUserId = _.toNumber(reply.request.session.get('userId'));
-
-      if (paramsUserId !== sessionUserId) {
-        req.flash('error', i18next.t('flash.errors.403'));
-        return reply.redirect(app.reverse('root'));
-      }
+      const userId = _.toNumber(req.params.id);
 
       try {
         const { password, user: newUserData } = req.body;
         const oldUser = await app.objection.models.user
           .query()
-          .findById(sessionUserId);
+          .findById(userId);
         const patchObject = _.keys(newUserData).reduce((acc, i) => {
           if (newUserData[i] === oldUser[i]) return acc;
           return { ...acc, [i]: newUserData[i] };
@@ -67,13 +61,12 @@ export default (app) => {
         }
 
         const updatedUser = await oldUser.$query().patchAndFetch(patchObject);
-
         req.session.set('email', updatedUser.email);
         req.flash('info', i18next.t('flash.user.update.success'));
       } catch (e) {
         req.flash('error', i18next.t('flash.user.update.error'));
       }
-      return reply.redirect(app.reverse('userProfile', { id: sessionUserId }));
+      return reply.redirect(app.reverse('userProfile', { id: userId }));
     })
     .delete('/users/:id', async (req, reply) => {
       try {

@@ -1,6 +1,7 @@
 setup:
 	npm install
 	npx knex migrate:latest
+	npx knex seed:run
 
 build:
 	npm run build
