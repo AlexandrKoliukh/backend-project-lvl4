@@ -1,0 +1,14 @@
+extends ../layouts/application.pug
+
+block content
+    table.table.table-striped
+        thead
+            tr
+                th= t('views.taskStatus.id')
+                th= t('views.taskStatus.name')
+                th= ''
+        tbody
+          each taskStatus in taskStatuses
+              tr
+                  td= taskStatus.id
+                  td= taskStatus.name

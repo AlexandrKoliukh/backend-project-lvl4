@@ -10,6 +10,7 @@ module.exports = {
     flash: {
       errors: {
         403: 'Недостаточно прав',
+        common: 'Произошла ошибка',
       },
       session: {
         create: {
@@ -37,6 +38,7 @@ module.exports = {
     layouts: {
       application: {
         users: 'Пользователи',
+        taskStatuses: 'Статусы',
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
@@ -48,6 +50,10 @@ module.exports = {
           signIn: 'Вход',
           submit: 'Войти',
         },
+      },
+      taskStatus: {
+        id: '#',
+        name: 'Название',
       },
       user: {
         id: 'ID',

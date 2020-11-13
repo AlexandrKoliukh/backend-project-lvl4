@@ -1,7 +1,6 @@
 // @ts-check
 
 import User from './User.js';
+import TaskStatus from './TaskStatus.js';
 
-export default [
-  User,
-];
+export default [User, TaskStatus];
