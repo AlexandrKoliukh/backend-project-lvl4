@@ -7,11 +7,15 @@ const resource = '/task-statuses';
 
 export default (app) => {
   app
-    .get(resource, { name: 'taskStatuses' }, async (req, reply) => {
-      const taskStatuses = await app.objection.models.taskStatus.query();
-      reply.render('taskStatus/index', { taskStatuses });
-      return reply;
-    })
+    .get(
+      resource,
+      { name: 'taskStatuses', preHandler: app.auth([app.verifySignedIn]) },
+      async (req, reply) => {
+        const taskStatuses = await app.objection.models.taskStatus.query();
+        reply.render('taskStatus/index', { taskStatuses });
+        return reply;
+      }
+    )
     .post(resource, async (req, reply) => {
       const taskStatus = await app.objection.models.taskStatus.fromJson(
         req.body.taskStatus

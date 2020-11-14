@@ -27,22 +27,18 @@ export default (app) => {
         return reply;
       }
     })
-    .get('/users/:id', { name: 'userProfile' }, async (req, reply) => {
-      const paramsUserId = _.toNumber(req.params.id);
-      const sessionUserId = _.toNumber(reply.request.session.get('userId'));
+    .get(
+      '/users/:id',
+      { name: 'userProfile', preHandler: app.auth([app.verifySession]) },
+      async (req, reply) => {
+        const userId = _.toNumber(req.params.id);
 
-      if (paramsUserId !== sessionUserId) {
-        req.flash('error', i18next.t('flash.errors.403'));
-        return reply.redirect(app.reverse('root'));
+        const user = await app.objection.models.user.query().findById(userId);
+        const keys = ['firstName', 'lastName', 'email'];
+
+        return reply.render('users/edit', { user, keys });
       }
-
-      const user = await app.objection.models.user
-        .query()
-        .findById(sessionUserId);
-      const keys = ['firstName', 'lastName', 'email'];
-
-      return reply.render('users/edit', { user, keys });
-    })
+    )
     .patch('/users/:id', async (req, reply) => {
       const userId = _.toNumber(req.params.id);
 
