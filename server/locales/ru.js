@@ -6,6 +6,9 @@ module.exports = {
       cancel: 'Отмена',
       delete: 'Удалить',
       update: 'Обновить',
+      new: 'Создать',
+      edit: 'Редактировать',
+      submit: 'Применить',
     },
     flash: {
       errors: {
@@ -35,6 +38,17 @@ module.exports = {
           error: 'Ошибка обновления',
         },
       },
+      taskStatus: {
+        delete: {
+          success: 'Статус был удален',
+        },
+        new: {
+          success: 'Статус был создан',
+        },
+        edit: {
+          success: 'Статус был обновлен',
+        },
+      },
     },
     layouts: {
       application: {
@@ -55,6 +69,10 @@ module.exports = {
       taskStatus: {
         id: '#',
         name: 'Название',
+        new: 'Новый статус',
+        delete: 'Удалить статус',
+        table: 'Статусы',
+        edit: 'Редактировать статус',
       },
       user: {
         id: 'ID',

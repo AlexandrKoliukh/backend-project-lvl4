@@ -1,0 +1,55 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.taskStatus.table')
+
+block content
+    a.btn.btn-primary.float-right(href='/task-statuses/new')= t('buttons.new')
+    table.table.table-striped
+        thead
+            tr
+                th= t('views.taskStatus.id')
+                th= t('views.taskStatus.name')
+                th= ''
+        tbody
+          each taskStatus in taskStatuses
+              tr
+                  td= taskStatus.id
+                  td= taskStatus.name
+                  td
+                    input.btn.btn-outline(
+                        type='button' value=t('buttons.delete')
+                        data-toggle='modal' data-target='#deleteTaskStatus' data-task-status-id= taskStatus.id
+                        onclick='document.querySelector("#deleteTaskStatus").dataset.taskStatusId = this.dataset.taskStatusId;'
+                    )
+                    a.btn.btn-outline(href='/task-statuses/' + taskStatus.id)= t('buttons.edit')
+
+    #deleteTaskStatus.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteTaskStatus' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    .container
+                        h5.modal-title.text-center= t('views.taskStatus.delete')
+                .modal-body
+                    form(method='post', name='deleteTaskStatus')
+                        input(
+                            name="_method"
+                            type="hidden"
+                            value='DELETE'
+                        )
+                        .d-flex.justify-content-between
+                            button.btn.btn-primary(
+                                type='button'
+                                data-dismiss='modal'
+                            )= t('buttons.cancel')
+                            button.btn.btn-danger(
+                                type='submit'
+                            )=t('buttons.delete')
+
+    script.
+        const deleteTaskStatusModal = document.getElementById('deleteTaskStatus');
+        deleteTaskStatusModal.addEventListener('shown.bs.modal', function () {
+          const form = document.deleteTaskStatus;
+          form.action = `/task-statuses/${deleteTaskStatusModal.dataset.taskStatusId}`;
+        })
