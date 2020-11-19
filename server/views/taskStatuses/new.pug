@@ -1,0 +1,11 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.taskStatus.new')
+
+block content
+    div.w-50.mx-auto
+        form(action=route('taskStatuses') method='post')
+            +input(taskStatus, 'name')(required)
+            +submit()(value=t('buttons.new'))

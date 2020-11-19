@@ -1,0 +1,16 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.taskStatus.edit')
+
+block content
+    div.w-50.mx-auto
+        form(action=`/task-statuses/${taskStatus.id}`, method='post')
+            input(
+                name="_method"
+                type="hidden"
+                value='patch'
+            )
+            +input(taskStatus, 'name')(required)
+            +submit()(value=t('buttons.save'))

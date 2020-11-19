@@ -1,5 +1,5 @@
-- const getInputName = (entity, property) => `${entity.constructor.name.toLowerCase()}[${property}]`
-- const getTKey = (entity, property) => `views.${entity.constructor.name.toLowerCase()}.${property}`
+- const getInputName = (entity, property) => `${_.lowerFirst(entity.constructor.name)}[${property}]`
+- const getTKey = (entity, property) => `views.${_.lowerFirst(entity.constructor.name)}.${property}`
 
 mixin formFor(entity = null)
   form&attributes(attributes)

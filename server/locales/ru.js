@@ -6,15 +6,19 @@ module.exports = {
       cancel: 'Отмена',
       delete: 'Удалить',
       update: 'Обновить',
+      new: 'Создать',
+      edit: 'Редактировать',
+      submit: 'Применить',
     },
     flash: {
       errors: {
+        401: 'Необходима авторизация',
         403: 'Недостаточно прав',
         common: 'Произошла ошибка',
       },
       session: {
         create: {
-          success: 'Вы залогинены',
+          success: 'Вы вошли',
           error: 'Неправильный емейл или пароль',
         },
         delete: {
@@ -32,6 +36,17 @@ module.exports = {
         update: {
           success: 'Данные пользователя были обновлены',
           error: 'Ошибка обновления',
+        },
+      },
+      taskStatus: {
+        delete: {
+          success: 'Статус был удален',
+        },
+        new: {
+          success: 'Статус был создан',
+        },
+        edit: {
+          success: 'Статус был обновлен',
         },
       },
     },
@@ -54,6 +69,10 @@ module.exports = {
       taskStatus: {
         id: '#',
         name: 'Название',
+        new: 'Новый статус',
+        delete: 'Удалить статус',
+        table: 'Статусы',
+        edit: 'Редактировать статус',
       },
       user: {
         id: 'ID',

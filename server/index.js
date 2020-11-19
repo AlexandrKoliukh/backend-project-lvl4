@@ -11,9 +11,11 @@ import fastifyFlash from 'fastify-flash';
 import fastifyReverseRoutes from 'fastify-reverse-routes';
 import fastifyMethodOverride from 'fastify-method-override';
 import fastifyObjectionjs from 'fastify-objectionjs';
+import fastifyAuth from 'fastify-auth';
 import Pug from 'pug';
 import i18next from 'i18next';
 import Rollbar from 'rollbar';
+import _ from 'lodash';
 import ru from './locales/ru.js';
 import webpackConfig from '../webpack.config.js';
 
@@ -26,7 +28,7 @@ const mode = process.env.NODE_ENV || 'development';
 const isProduction = mode === 'production';
 const isDevelopment = mode === 'development';
 
-const setUpViews = (app) => {
+const setupViews = (app) => {
   const { devServer } = webpackConfig;
   const devHost = `http://${devServer.host}:${devServer.port}`;
   const domain = isDevelopment ? devHost : '';
@@ -48,7 +50,7 @@ const setUpViews = (app) => {
   });
 };
 
-const setUpStaticAssets = (app) => {
+const setupStaticAssets = (app) => {
   const pathPublic = isProduction
     ? path.join(__dirname, '..', 'public')
     : path.join(__dirname, '..', 'dist', 'public');
@@ -69,7 +71,7 @@ const setupLocalization = () => {
   });
 };
 
-const setUpRollbar = (app) => {
+const setupRollbar = (app) => {
   const rollbar = new Rollbar({
     accessToken: process.env.ROLLBAR_TOKEN,
     captureUncaught: true,
@@ -79,6 +81,29 @@ const setUpRollbar = (app) => {
   app.setErrorHandler((error, request, reply) => {
     rollbar.error(`Error: ${error}`, request, reply);
   });
+};
+
+const setupAuth = (app) => {
+  app
+    .decorate('verifySignedIn', (req, reply, done) => {
+      if (reply.request.signedIn) {
+        return done();
+      }
+      req.flash('error', i18next.t('flash.errors.401'));
+      reply.redirect(app.reverse('root'));
+      return done();
+    })
+    .decorate('verifySession', (req, reply, done) => {
+      const paramsUserId = _.toNumber(req.params.id);
+      const sessionUserId = _.toNumber(reply.request.session.get('userId'));
+
+      if (paramsUserId === sessionUserId) {
+        return done();
+      }
+      req.flash('error', i18next.t('flash.errors.403'));
+      reply.redirect(app.reverse('root'));
+      return done();
+    });
 };
 
 const addHooks = (app) => {
@@ -97,6 +122,7 @@ const addHooks = (app) => {
 };
 
 const registerPlugins = (app) => {
+  app.register(fastifyAuth);
   app.register(fastifyErrorPage);
   app.register(fastifyReverseRoutes);
   app.register(fastifyFormbody);
@@ -125,12 +151,14 @@ export default () => {
 
   registerPlugins(app);
 
-  setupLocalization();
-  setUpViews(app);
-  setUpStaticAssets(app);
-  setUpRollbar(app);
-  addRoutes(app);
+  setupLocalization(app);
+  setupViews(app);
+  setupStaticAssets(app);
+  setupRollbar(app);
+  setupAuth(app);
   addHooks(app);
+
+  app.after(() => addRoutes(app));
 
   return app;
 };
