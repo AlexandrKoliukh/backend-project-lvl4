@@ -23,3 +23,6 @@ lint:
 
 test:
 	npm run test
+
+test-coverage:
+	npm run coverage

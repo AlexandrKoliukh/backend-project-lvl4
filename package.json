@@ -10,7 +10,8 @@
     "build-frontend": "NODE_ENV=production webpack -p",
     "build": "rm -rf dist && npm run build-frontend && npm run build-server && NODE_ENV=production knex migrate:latest && NODE_ENV=production knex seeds:run",
     "start": "NODE_ENV=production node dist/server/bin/server.js",
-    "develop": "npx nodemon --exec DEBUG=application:* npx babel-node server/bin/server.js"
+    "develop": "npx nodemon --exec DEBUG=application:* npx babel-node server/bin/server.js",
+    "coverage": "jest --collectCoverage"
   },
   "author": "Aleksandr Koliukh",
   "dependencies": {
