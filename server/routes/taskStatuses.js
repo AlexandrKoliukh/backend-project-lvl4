@@ -13,7 +13,6 @@ export default (app) => {
       async (req, reply) => {
         const taskStatuses = await app.objection.models.taskStatus.query();
         reply.render('taskStatuses/index', { taskStatuses });
-        return reply;
       }
     )
     .get(
@@ -25,7 +24,7 @@ export default (app) => {
           .query()
           .findById(taskStatusId);
 
-        return reply.render('taskStatuses/edit', { taskStatus });
+        reply.render('taskStatuses/edit', { taskStatus });
       }
     )
     .get(
@@ -47,11 +46,9 @@ export default (app) => {
           await app.objection.models.taskStatus.query().insert(taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.new.success'));
           reply.redirect(app.reverse('taskStatuses'));
-          return reply;
         } catch ({ data }) {
           req.flash('error', i18next.t('flash.errors.common'));
           reply.render('taskStatuses', { taskStatus, errors: data });
-          return reply;
         }
       }
     )
@@ -72,8 +69,7 @@ export default (app) => {
           req.flash('error', i18next.t('flash.errors.common'));
         }
 
-        const taskStatuses = await app.objection.models.taskStatus.query();
-        return reply.redirect(app.reverse('taskStatuses', { taskStatuses }));
+        reply.redirect(app.reverse('taskStatuses'));
       }
     )
     .delete(
@@ -84,7 +80,7 @@ export default (app) => {
         await app.objection.models.taskStatus.query().deleteById(taskStatusId);
         req.flash('info', i18next.t('flash.taskStatus.delete.success'));
 
-        return reply.redirect(app.reverse('taskStatuses'));
+        reply.redirect(app.reverse('taskStatuses'));
       }
     );
 };

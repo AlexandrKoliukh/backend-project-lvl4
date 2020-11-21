@@ -27,6 +27,9 @@ html(lang="en").h-100
           if reply.request.signedIn
             li.nav-item
               a.nav-link(href=route('taskStatuses'))= t('layouts.application.taskStatuses')
+          if reply.request.signedIn
+            li.nav-item
+              a.nav-link(href=route('tasks'))= t('layouts.application.tasks')
         ul.navbar-nav
           if reply.request.signedIn
             li.nav-item

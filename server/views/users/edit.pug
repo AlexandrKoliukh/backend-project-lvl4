@@ -12,8 +12,8 @@ block content
                     value='patch'
                 )
                 each key in keys
-                    +input(user, key)(type='!{key}')
-                +input(user, 'password')(name="password" type="password" placeholder=t('views.user.passwordPlaceholder'))
+                    +input(user, key, errors)(type='!{key}')
+                +input(user, 'password', errors)(name="password" type="password" placeholder=t('views.user.passwordPlaceholder'))
                 +submit.mb-3(value=t('buttons.save'))
 
             input.btn.btn-outline-danger(

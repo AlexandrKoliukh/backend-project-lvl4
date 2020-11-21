@@ -1,5 +1,9 @@
 extends ../layouts/application.pug
 
+block header
+  div.text-center
+    = t('views.user.table')
+
 block content
   table.table.table-striped
     thead

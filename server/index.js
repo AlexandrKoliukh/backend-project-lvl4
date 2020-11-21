@@ -136,7 +136,7 @@ const registerPlugins = (app) => {
   app.register(fastifyMethodOverride);
   app.register(fastifyObjectionjs, {
     knexConfig: knexConfig[mode],
-    models,
+    models: _.values(models),
   });
 };
 

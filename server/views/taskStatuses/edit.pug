@@ -12,5 +12,5 @@ block content
                 type="hidden"
                 value='patch'
             )
-            +input(taskStatus, 'name')(required)
+            +input(taskStatus, 'name', errors)(required)
             +submit()(value=t('buttons.save'))

@@ -54,6 +54,7 @@ module.exports = {
       application: {
         users: 'Пользователи',
         taskStatuses: 'Статусы',
+        tasks: 'Задачи',
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
@@ -65,6 +66,17 @@ module.exports = {
           signIn: 'Вход',
           submit: 'Войти',
         },
+      },
+      task: {
+        table: 'Задачи',
+        name: 'Название',
+        executor: 'Исполнитель',
+        nonExecutor: 'Не назначен',
+        creator: 'Создатель',
+        new: 'Новая задача',
+        description: 'Описание',
+        executor_id: 'Исполнитель',
+        status_id: 'Статус',
       },
       taskStatus: {
         id: '#',
@@ -82,6 +94,7 @@ module.exports = {
         password: 'Пароль',
         firstName: 'Имя',
         lastName: 'Фамилия',
+        table: 'Пользователи',
         new: {
           submit: 'Сохранить',
           signUp: 'Регистрация',

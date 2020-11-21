@@ -8,7 +8,6 @@ export default (app) => {
     .get('/users', { name: 'users' }, async (req, reply) => {
       const users = await app.objection.models.user.query();
       reply.render('users/index', { users });
-      return reply;
     })
     .get('/users/new', { name: 'newUser' }, (req, reply) => {
       const user = new app.objection.models.user();
@@ -20,11 +19,9 @@ export default (app) => {
         await app.objection.models.user.query().insert(user);
         req.flash('info', i18next.t('flash.user.create.success'));
         reply.redirect(app.reverse('root'));
-        return reply;
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.user.create.error'));
         reply.render('users/new', { user, errors: data });
-        return reply;
       }
     })
     .get(
@@ -36,7 +33,7 @@ export default (app) => {
         const user = await app.objection.models.user.query().findById(userId);
         const keys = ['firstName', 'lastName', 'email'];
 
-        return reply.render('users/edit', { user, keys });
+        reply.render('users/edit', { user, keys });
       }
     )
     .patch('/users/:id', async (req, reply) => {
@@ -62,7 +59,8 @@ export default (app) => {
       } catch (e) {
         req.flash('error', i18next.t('flash.user.update.error'));
       }
-      return reply.redirect(app.reverse('userProfile', { id: userId }));
+
+      reply.redirect(app.reverse('userProfile', { id: userId }));
     })
     .delete('/users/:id', async (req, reply) => {
       try {
@@ -73,6 +71,7 @@ export default (app) => {
       } catch ({ data }) {
         req.flash('error', i18next.t('flash.user.delete.error'));
       }
-      return reply.redirect(app.reverse('root'));
+
+      reply.redirect(app.reverse('root'));
     });
 };

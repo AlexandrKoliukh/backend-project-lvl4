@@ -1,0 +1,16 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.task.new')
+
+block content
+    div.w-50.mx-auto
+        form(action=route('tasks') method='post')
+            .d-none
+                +input(task, 'creator_id', errors, currUserId)(type='hidden')
+            +input(task, 'name', errors)(required)
+            +textarea(task, 'description', errors)
+            +select(task, 'executor_id', users, 'id', 'email', t('views.task.nonExecutor'), errors)
+            +select(task, 'status_id', taskStatuses, 'id', 'name', '', errors)
+            +submit()(value=t('buttons.new'))

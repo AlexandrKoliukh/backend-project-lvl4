@@ -4,10 +4,12 @@ exports.seed = (knex) => {
     .del()
     .then(() => {
       return knex('task_statuses').insert([
-        { id: 1, name: 'на тестировании' },
+        { id: 1, name: 'новый' },
         { id: 2, name: 'в работе' },
-        { id: 3, name: 'новый' },
+        { id: 3, name: 'на тестировании' },
         { id: 4, name: 'завершен' },
       ]);
     });
 };
+
+// exports.seed = () => {};

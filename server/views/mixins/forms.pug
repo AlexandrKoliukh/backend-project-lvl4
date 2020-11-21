@@ -5,7 +5,7 @@ mixin formFor(entity = null)
   form&attributes(attributes)
     block
 
-mixin input(entity, propertyName, errors = [])
+mixin input(entity, propertyName, errors = [], defaultValue = '')
   - error = _.get(errors, propertyName)
   .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
     label(for=propertyName).form-label= t(getTKey(entity, propertyName))
@@ -13,8 +13,39 @@ mixin input(entity, propertyName, errors = [])
       name=getInputName(entity, propertyName)
       class='form-control'
       id=propertyName
+      value=_.get(entity, propertyName, defaultValue)
+    )&attributes(attributes)
+    if error
+      .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
+
+mixin textarea(entity, propertyName, errors = [])
+  - error = _.get(errors, propertyName)
+  .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
+    label(for=propertyName).form-label= t(getTKey(entity, propertyName))
+    textarea(
+      name=getInputName(entity, propertyName)
+      class='form-control'
+      id=propertyName
       value=_.get(entity, propertyName, '')
     )&attributes(attributes)
+    if error
+      .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
+
+mixin select(entity, propertyName, options, value, caption, notSelectedCaption = '', errors = [])
+  - error = _.get(errors, propertyName)
+  .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
+    label(for=propertyName).form-label= t(getTKey(entity, propertyName))
+    select(
+      name=getInputName(entity, propertyName)
+      class='form-select'
+      id=propertyName
+      value=_.get(entity, propertyName, '')
+    )&attributes(attributes)
+      if (notSelectedCaption)
+        option(value='')= notSelectedCaption
+      for item in options
+        option(value=item[value])= item[caption]
+
     if error
       .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
 
