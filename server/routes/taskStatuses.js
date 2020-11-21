@@ -72,8 +72,7 @@ export default (app) => {
           req.flash('error', i18next.t('flash.errors.common'));
         }
 
-        const taskStatuses = await app.objection.models.taskStatus.query();
-        return reply.redirect(app.reverse('taskStatuses', { taskStatuses }));
+        return reply.redirect(app.reverse('taskStatuses'));
       }
     )
     .delete(

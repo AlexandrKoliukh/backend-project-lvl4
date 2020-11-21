@@ -1,8 +1,9 @@
 // @ts-check
 
-import faker from 'faker';
+import _ from 'lodash';
 import app from '../server/index.js';
 import encrypt from '../server/lib/secure.js';
+import { testUser as initTestUser } from '../__fixtures__/user';
 
 describe('user crud', () => {
   let server;
@@ -14,12 +15,7 @@ describe('user crud', () => {
     await server.objection.knex.migrate.latest();
     await server.objection.knex.seed.run();
 
-    testUser = {
-      email: faker.internet.email(),
-      password: faker.internet.password(5),
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-    };
+    testUser = _.cloneDeep(initTestUser);
 
     Model = server.objection.models.user;
   });

@@ -9,26 +9,28 @@ const seeds = {
   directory: path.resolve('server', 'seeds'),
 };
 
+const common = {
+  migrations,
+  seeds,
+};
+
 module.exports = {
   development: {
     client: 'sqlite3',
     connection: {
       filename: './database.sqlite',
     },
-    migrations,
-    seeds,
+    ...common,
   },
   test: {
     client: 'sqlite3',
     connection: ':memory:',
     debug: false,
-    migrations,
-    seeds,
+    ...common,
   },
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
-    migrations,
-    seeds,
+    ...common,
   },
 };

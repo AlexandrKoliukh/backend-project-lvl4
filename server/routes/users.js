@@ -62,7 +62,8 @@ export default (app) => {
       } catch (e) {
         req.flash('error', i18next.t('flash.user.update.error'));
       }
-      return reply.redirect(app.reverse('userProfile', { id: userId }));
+
+      reply.redirect(app.reverse('userProfile', { id: userId }));
     })
     .delete('/users/:id', async (req, reply) => {
       try {

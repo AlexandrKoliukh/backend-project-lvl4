@@ -17,13 +17,15 @@ block content
               tr
                   td= taskStatus.id
                   td= taskStatus.name
-                  td
-                    input.btn.btn-outline(
-                        type='button' value=t('buttons.delete')
-                        data-toggle='modal' data-target='#deleteTaskStatus' data-task-status-id= taskStatus.id
+                  td.d-flex.flex-column
+                    a.mb-1(
+                        href='#'
+                        data-toggle='modal'
+                        data-target='#deleteTaskStatus'
+                        data-task-status-id= taskStatus.id
                         onclick='document.querySelector("#deleteTaskStatus").dataset.taskStatusId = this.dataset.taskStatusId;'
-                    )
-                    a.btn.btn-outline(href='/task-statuses/' + taskStatus.id)= t('buttons.edit')
+                    )= t('buttons.delete')
+                    a(href='/task-statuses/' + taskStatus.id)= t('buttons.edit')
 
     #deleteTaskStatus.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteTaskStatus' aria-hidden='true')
         .modal-dialog(role='document')
