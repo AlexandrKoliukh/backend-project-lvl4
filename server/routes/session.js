@@ -19,14 +19,12 @@ export default (app) => {
       if (!user || user.passwordDigest !== signInForm.passwordDigest) {
         req.flash('error', i18next.t('flash.session.create.error'));
         reply.render('session/new', { signInForm });
-        return reply;
       }
 
       req.session.set('userId', user.id);
       req.session.set('email', signInForm.email);
       req.flash('info', i18next.t('flash.session.create.success'));
       reply.redirect(app.reverse('root'));
-      return reply;
     })
     .delete('/session', (req, reply) => {
       req.session.set('userId', null);

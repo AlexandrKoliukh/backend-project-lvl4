@@ -42,9 +42,6 @@ export default (app) => {
       resource,
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const a = {
-          ...req.body.task,
-        };
         const task = await app.objection.models.task.fromJson(req.body.task);
         try {
           await tasksService.insert(task);

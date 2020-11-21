@@ -65,8 +65,4 @@ export default class Task extends Model {
       },
     };
   }
-
-  static set statusId(id) {
-    return _.toNumber(id);
-  }
 }
