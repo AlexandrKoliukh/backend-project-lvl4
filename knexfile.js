@@ -1,6 +1,7 @@
 // @ts-check
 
 const path = require('path');
+const { knexSnakeCaseMappers } = require('objection');
 
 const migrations = {
   directory: path.resolve('server', 'migrations'),
@@ -12,6 +13,7 @@ const seeds = {
 const common = {
   migrations,
   seeds,
+  ...knexSnakeCaseMappers(),
 };
 
 module.exports = {

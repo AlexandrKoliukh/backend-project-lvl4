@@ -21,8 +21,8 @@ describe('task crud', () => {
     testTask = {
       name: faker.lorem.word(),
       description: faker.lorem.paragraph(),
-      status_id: 1,
-      creator_id: 1,
+      statusId: 1,
+      creatorId: 1,
     };
 
     await server.inject({
@@ -75,8 +75,8 @@ describe('task crud', () => {
     };
 
     expect(createdTask.name).toEqual(testTask.name);
-    expect(createdTask.statusId).toEqual(testTask.status_id);
-    expect(createdTask.creatorId).toEqual(testTask.creator_id);
+    expect(createdTask.statusId).toEqual(testTask.statusId);
+    expect(createdTask.creatorId).toEqual(testTask.creatorId);
     expect(res.statusCode).toBe(302);
   });
 
