@@ -1,0 +1,53 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.task.info')
+
+block content
+    .bg-light.p-5.rounded-lg.w-75.mx-auto
+        h1.display-6= task.name
+        p.lead= task.description
+        hr.my-4
+        .container
+            .row.p-1
+                .col= t('views.task.creator')
+                .col= task.creator.email
+            .row.p-1
+                .col= t('views.task.executor')
+                .col= task.executor ? task.executor.email : t('views.task.nonExecutor')
+            .row.p-1
+                .col= t('views.task.status')
+                .col= task.status.name
+        hr.my-4
+
+        .d-flex.justify-content-between
+            a.btn.btn-danger(
+                href='#'
+                data-toggle='modal'
+                data-target='#deleteTask'
+            )= t('buttons.delete')
+            a.btn.btn-primary(href=`/tasks/${task.id}/edit`)= t('buttons.edit')
+
+
+    #deleteTask.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteTask' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    .container
+                        h5.modal-title.text-center= t('views.task.delete')
+                .modal-body
+                    form(method='POST')
+                        input(
+                            name="_method"
+                            type="hidden"
+                            value='DELETE'
+                        )
+                        .d-flex.justify-content-between
+                            button.btn.btn-primary(
+                                type='button'
+                                data-dismiss='modal'
+                            )= t('buttons.cancel')
+                            button.btn.btn-danger(
+                                type='submit'
+                            )=t('buttons.delete')

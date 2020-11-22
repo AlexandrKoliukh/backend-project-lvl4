@@ -49,6 +49,17 @@ module.exports = {
           success: 'Статус был обновлен',
         },
       },
+      task: {
+        delete: {
+          success: 'Задача была удалена',
+        },
+        new: {
+          success: 'Задача была создана',
+        },
+        edit: {
+          success: 'Задача была обновлена',
+        },
+      },
     },
     layouts: {
       application: {
@@ -71,12 +82,16 @@ module.exports = {
         table: 'Задачи',
         name: 'Название',
         executor: 'Исполнитель',
+        status: 'Статус',
         nonExecutor: 'Не назначен',
-        creator: 'Создатель',
+        creator: 'Автор',
         new: 'Новая задача',
         description: 'Описание',
-        executor_id: 'Исполнитель',
-        status_id: 'Статус',
+        executorId: 'Исполнитель',
+        statusId: 'Статус',
+        edit: 'Изменить задачу',
+        delete: 'Удалить задачу',
+        info: 'Информация о задаче',
       },
       taskStatus: {
         id: '#',

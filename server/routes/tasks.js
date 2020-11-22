@@ -19,12 +19,24 @@ export default (app) => {
     )
     .get(
       `${resource}/:id`,
-      { name: 'tasks/edit', preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'tasks/info', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
         const task = await tasksService.getById(taskId);
 
-        reply.render('tasks/edit', { task });
+        reply.render('tasks/info', { task });
+      }
+    )
+    .get(
+      `${resource}/:id/edit`,
+      { name: 'tasks/edit', preHandler: app.auth([app.verifySignedIn]) },
+      async (req, reply) => {
+        const taskId = _.toNumber(req.params.id);
+        const task = await tasksService.getById(taskId);
+        const users = await app.objection.models.user.query();
+        const taskStatuses = await app.objection.models.taskStatus.query();
+
+        reply.render('tasks/edit', { task, users, taskStatuses });
       }
     )
     .get(
@@ -60,12 +72,14 @@ export default (app) => {
         const taskId = _.toNumber(req.params.id);
 
         try {
-          const { task } = req.body;
-          await tasksService.update(taskId, task);
+          const task = app.objection.models.task.fromJson(req.body.task);
 
+          await tasksService.update(taskId, task);
           req.flash('info', i18next.t('flash.task.edit.success'));
-        } catch (e) {
+        } catch ({ data }) {
+          console.log(data);
           req.flash('error', i18next.t('flash.errors.common'));
+          reply.redirect(app.reverse('tasks/info', { errors: data }));
         }
 
         reply.redirect(app.reverse('tasks'));

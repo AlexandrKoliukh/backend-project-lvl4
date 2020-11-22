@@ -16,9 +16,7 @@ export default class Task extends Model {
 
     return {
       ...json,
-      status_id: _.toNumber(json.status_id),
-      creator_id: _.toNumber(json.creator_id),
-      executor_id: _.toNumber(json.executor_id) || null,
+      executorId: _.toNumber(json.executor_id) || null,
     };
   }
 
@@ -28,7 +26,7 @@ export default class Task extends Model {
         relation: Model.HasOneRelation,
         modelClass: TaskStatus,
         join: {
-          from: 'tasks.status_id',
+          from: 'tasks.statusId',
           to: 'task_statuses.id',
         },
       },
@@ -36,7 +34,7 @@ export default class Task extends Model {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
-          from: 'tasks.creator_id',
+          from: 'tasks.creatorId',
           to: 'users.id',
         },
       },
@@ -44,7 +42,7 @@ export default class Task extends Model {
         relation: Model.HasOneRelation,
         modelClass: User,
         join: {
-          from: 'tasks.executor_id',
+          from: 'tasks.executorId',
           to: 'users.id',
         },
       },
@@ -54,14 +52,14 @@ export default class Task extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'status_id', 'creator_id'],
+      required: ['name', 'statusId', 'creatorId'],
       properties: {
         id: { type: 'integer' },
         name: { type: 'string' },
         description: { type: 'text' },
-        status_id: { type: 'integer' },
-        creator_id: { type: 'integer' },
-        executor_id: { type: ['integer', 'null'] },
+        statusId: { type: ['integer', 'string'] },
+        creatorId: { type: ['integer', 'string'] },
+        executorId: { type: ['integer', 'null'] },
       },
     };
   }

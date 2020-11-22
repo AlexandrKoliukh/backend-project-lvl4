@@ -10,18 +10,14 @@ block content
         thead
             tr
                 th= t('views.task.name')
-                th= t('views.taskStatus.name')
+                th= t('views.task.status')
                 th= t('views.task.creator')
                 th= t('views.task.executor')
-                th= ''
         tbody
           each task in tasks
               tr
-                  td= task.name
+                  td
+                    a(href=`/tasks/${task.id}`)= task.name
                   td= task.status && task.status.name
                   td= task.creator && task.creator.email
                   td= task.executor && task.executor.email || t('views.task.nonExecutor')
-                  td
-                      input.btn.btn-link(
-                          type='button' value=t('buttons.delete')
-                      )

@@ -2,16 +2,20 @@ extends ../layouts/application.pug
 
 block header
     div.text-center
-        = t('views.task.new')
+        = t('views.task.edit')
 
 block content
     div.w-50.mx-auto
-        form(action=route('tasks') method='post')
+        form(action=`${route('tasks')}/${task.id}` method='post')
+            input(
+                name="_method"
+                type="hidden"
+                value='patch'
+            )
             .d-none
                 +input(task, 'creatorId', errors, currUserId)(type='hidden')
-
             +input(task, 'name', errors)(required)
             +textarea(task, 'description', errors)
             +select(task, 'executorId', users, 'id', 'email', t('views.task.nonExecutor'), errors)
             +select(task, 'statusId', taskStatuses, 'id', 'name', '', errors)
-            +submit()(value=t('buttons.new'))
+            +submit()(value=t('buttons.save'))
