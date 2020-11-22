@@ -1,8 +1,7 @@
 // @ts-check
 
-import { knexSnakeCaseMappers } from 'objection';
-
 const path = require('path');
+const { knexSnakeCaseMappers } = require('objection');
 
 const migrations = {
   directory: path.resolve('server', 'migrations'),
