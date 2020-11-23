@@ -6,7 +6,11 @@ block header
 
 block content
     .bg-light.p-5.rounded-lg.w-75.mx-auto
-        h1.display-6= task.name
+        .d-flex.justify-content-between
+            h1.display-6= task.name
+            div
+                for label in task.labels
+                    .badge.bg-secondary.m-1= label.name
         p.lead= task.description
         hr.my-4
         .container

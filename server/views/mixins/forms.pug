@@ -31,8 +31,12 @@ mixin textarea(entity, propertyName, errors = [])
       .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
 
 mixin select(entity, propertyName, options, value, caption, notSelectedCaption = '', errors = [])
-  - error = _.get(errors, propertyName)
-  - id = _.get(entity, propertyName, '');
+  -
+    let error = _.get(errors, propertyName)
+    let id;
+    const propertyIdData = _.get(entity, propertyName, '')
+    if (_.isArray(propertyIdData)) id = _.map(propertyIdData, (i) => i.id)
+    else id = propertyIdData
 
   .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
     label(for=propertyName).form-label= t(getTKey(entity, propertyName))
@@ -41,11 +45,13 @@ mixin select(entity, propertyName, options, value, caption, notSelectedCaption =
       class='form-select'
       id=propertyName
     )&attributes(attributes)
-
       if (notSelectedCaption)
         option(value='')= notSelectedCaption
       for item in options
-        option(value=item[value], selected= id == item[value])= item[caption]
+        if (_.isArray(id))
+          option(value=item[value], selected= _.includes(id, item[value]))= item[caption]
+        else
+          option(value=item[value], selected= id == item[value])= item[caption]
     if error
       .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
 

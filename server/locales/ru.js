@@ -49,6 +49,17 @@ module.exports = {
           success: 'Статус был обновлен',
         },
       },
+      label: {
+        delete: {
+          success: 'Метка была удалена',
+        },
+        new: {
+          success: 'Метка была создана',
+        },
+        edit: {
+          success: 'Метка была обновлена',
+        },
+      },
       task: {
         delete: {
           success: 'Задача была удалена',
@@ -65,6 +76,7 @@ module.exports = {
       application: {
         users: 'Пользователи',
         taskStatuses: 'Статусы',
+        labels: 'Метки',
         tasks: 'Задачи',
         signIn: 'Вход',
         signUp: 'Регистрация',
@@ -83,6 +95,7 @@ module.exports = {
         name: 'Название',
         executor: 'Исполнитель',
         status: 'Статус',
+        labels: 'Метки',
         nonExecutor: 'Не назначен',
         creator: 'Автор',
         new: 'Новая задача',
@@ -100,6 +113,14 @@ module.exports = {
         delete: 'Удалить статус',
         table: 'Статусы',
         edit: 'Редактировать статус',
+      },
+      label: {
+        id: '#',
+        name: 'Название',
+        new: 'Новая метка',
+        delete: 'Удалить метку',
+        table: 'Метки',
+        edit: 'Редактировать метку',
       },
       user: {
         id: 'ID',

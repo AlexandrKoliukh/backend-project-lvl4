@@ -3,28 +3,31 @@
 import faker from 'faker';
 import _ from 'lodash';
 import app from '../server/index.js';
-import { testUser } from '../__fixtures__/user';
 
-describe('task crud', () => {
+describe('label crud', () => {
   let server;
+  let testLabel;
   let Model;
+  let testUser;
   let cookies;
-  let testTask;
 
   beforeAll(async () => {
     server = await app();
     await server.objection.knex.migrate.latest();
     await server.objection.knex.seed.run();
 
-    Model = server.objection.models.task;
-
-    testTask = {
+    testLabel = {
       name: faker.lorem.word(),
-      description: faker.lorem.paragraph(),
-      statusId: 1,
-      creatorId: 1,
-      labels: ['1', '2'],
     };
+
+    testUser = {
+      email: faker.internet.email(),
+      password: faker.internet.password(5),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+    };
+
+    Model = server.objection.models.label;
 
     await server.inject({
       method: 'POST',
@@ -50,74 +53,72 @@ describe('task crud', () => {
     server.close();
   });
 
-  test('Task GET', async () => {
+  test('Label GET', async () => {
     const res = await server.inject({
       method: 'GET',
-      url: '/tasks',
+      url: '/labels',
       cookies,
     });
     expect(res.statusCode).toBe(200);
   });
 
-  test('Task POST', async () => {
+  test('Label POST', async () => {
     const res = await server.inject({
       method: 'POST',
-      url: '/tasks',
-      payload: { task: testTask },
+      url: '/labels',
+      payload: { label: testLabel },
       cookies,
     });
-    const createdTask = await Model.query().findOne({
-      name: testTask.name,
+    const createdLabel = await Model.query().findOne({
+      name: testLabel.name,
     });
 
-    testTask = {
-      ...testTask,
-      id: createdTask.id,
+    testLabel = {
+      ...testLabel,
+      id: createdLabel.id,
     };
 
-    expect(createdTask.name).toEqual(testTask.name);
-    expect(createdTask.statusId).toEqual(testTask.statusId);
-    expect(createdTask.creatorId).toEqual(testTask.creatorId);
+    expect(createdLabel.name).toEqual(testLabel.name);
     expect(res.statusCode).toBe(302);
   });
 
-  test('Task PATCH', async () => {
-    const newName = `TEST_${testTask.name}`;
-    const newTask = Model.fromJson({
-      ...testTask,
+  test('Label PATCH', async () => {
+    const newName = `TEST_${testLabel.name}`;
+    const newLabel = Model.fromJson({
+      ...testLabel,
       name: newName,
     });
 
     const res = await server.inject({
       method: 'PATCH',
-      url: `/tasks/${testTask.id}`,
+      url: `/labels/${testLabel.id}`,
       payload: {
-        task: newTask,
+        label: newLabel,
       },
       cookies,
     });
 
-    const updatedTask = await Model.query().findOne({
-      id: testTask.id,
+    const updatedLabel = await Model.query().findOne({
+      id: testLabel.id,
     });
 
-    testTask = {
-      ...testTask,
-      name: updatedTask.name,
+    testLabel = {
+      ...testLabel,
+      name: updatedLabel.name,
     };
 
-    expect(updatedTask.name).toEqual(newName);
+    expect(updatedLabel.name).toEqual(newName);
     expect(res.statusCode).toBe(302);
   });
 
-  test('Task DELETE', async () => {
+  test('Label DELETE', async () => {
     await server.inject({
       method: 'delete',
-      url: `/tasks/${testTask.id}`,
+      url: `/labels/${testLabel.id}`,
       cookies,
     });
 
-    const task = await Model.query().findOne({ name: testTask.name });
-    expect(task).toBeUndefined();
+    const user = await Model.query().findOne({ name: testLabel.name });
+    expect(user).toBeUndefined();
   });
 });

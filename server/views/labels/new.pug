@@ -1,0 +1,11 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.label.new')
+
+block content
+    div.w-50.mx-auto
+        form(action=route('labels') method='post')
+            +input(label, 'name', errors)(required)
+            +submit()(value=t('buttons.new'))

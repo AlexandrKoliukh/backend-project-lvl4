@@ -14,4 +14,5 @@ block content
             +textarea(task, 'description', errors)
             +select(task, 'executorId', users, 'id', 'email', t('views.task.nonExecutor'), errors)
             +select(task, 'statusId', taskStatuses, 'id', 'name', '', errors)
+            +select(task, 'labels', labels, 'id', 'name', '', errors)(multiple)
             +submit()(value=t('buttons.new'))

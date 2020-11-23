@@ -2,12 +2,12 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
-import TasksService from '../services/TasksService';
+import TaskService from '../services/TaskService';
 
 const resource = '/tasks';
 
 export default (app) => {
-  const tasksService = new TasksService();
+  const tasksService = new TaskService(app);
   app
     .get(
       resource,
@@ -35,8 +35,9 @@ export default (app) => {
         const task = await tasksService.getById(taskId);
         const users = await app.objection.models.user.query();
         const taskStatuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
 
-        reply.render('tasks/edit', { task, users, taskStatuses });
+        reply.render('tasks/edit', { task, users, taskStatuses, labels });
       }
     )
     .get(
@@ -46,8 +47,9 @@ export default (app) => {
         const task = new app.objection.models.task();
         const users = await app.objection.models.user.query();
         const taskStatuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
 
-        reply.render('tasks/new', { task, users, taskStatuses });
+        reply.render('tasks/new', { task, users, taskStatuses, labels });
       }
     )
     .post(
@@ -59,10 +61,12 @@ export default (app) => {
           await tasksService.insert(task);
           req.flash('info', i18next.t('flash.task.new.success'));
           reply.redirect(app.reverse('tasks'));
-        } catch ({ data }) {
+        } catch (err) {
+          req.log.error(err);
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.render('tasks', { task, errors: data });
+          reply.render('tasks', { task, errors: err.data });
         }
+        reply.code(204);
       }
     )
     .patch(
