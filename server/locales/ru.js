@@ -49,7 +49,7 @@ module.exports = {
           success: 'Статус был обновлен',
         },
       },
-      labels: {
+      label: {
         delete: {
           success: 'Метка была удалена',
         },

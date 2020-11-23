@@ -2,16 +2,18 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
+import LabelService from '../services/LabelService';
 
 const resource = '/labels';
 
 export default (app) => {
+  const labelService = new LabelService(app);
   app
     .get(
       resource,
       { name: 'labels', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const labels = await app.objection.models.label.query();
+        const labels = await labelService.getAll();
         reply.render('labels/index', { labels });
       }
     )
@@ -20,9 +22,7 @@ export default (app) => {
       { name: 'labels/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
-        const label = await app.objection.models.label
-          .query()
-          .findById(labelId);
+        const label = await labelService.getById(labelId);
 
         reply.render('labels/edit', { label });
       }
@@ -32,6 +32,7 @@ export default (app) => {
       { name: 'labels/new', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const label = new app.objection.models.label();
+
         reply.render('labels/new', { label });
       }
     )
@@ -41,12 +42,13 @@ export default (app) => {
       async (req, reply) => {
         const label = await app.objection.models.label.fromJson(req.body.label);
         try {
-          await app.objection.models.label.query().insert(label);
+          await labelService.insert(req.body.label);
           req.flash('info', i18next.t('flash.label.new.success'));
           reply.redirect(app.reverse('labels'));
-        } catch ({ data }) {
+        } catch (e) {
+          reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.render('labels', { label, errors: data });
+          reply.render('labels/new', { label, errors: e.data });
         }
       }
     )
@@ -55,16 +57,15 @@ export default (app) => {
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
+        const { label } = req.body;
 
         try {
-          const { label } = req.body;
-          const oldTaskStatus = await app.objection.models.label
-            .query()
-            .findById(labelId);
-          await oldTaskStatus.$query().patchAndFetch(label);
+          await labelService.update(labelId, label);
           req.flash('info', i18next.t('flash.label.edit.success'));
         } catch (e) {
+          reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
+          reply.render('labels/edit', { label, errors: e.data });
         }
 
         reply.redirect(app.reverse('labels'));
@@ -75,8 +76,13 @@ export default (app) => {
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
-        await app.objection.models.label.query().deleteById(labelId);
-        req.flash('info', i18next.t('flash.label.delete.success'));
+        try {
+          await labelService.delete(labelId);
+          req.flash('info', i18next.t('flash.label.delete.success'));
+        } catch (e) {
+          reply.log.error(e);
+          req.flash('error', i18next.t('flash.errors.common'));
+        }
 
         reply.redirect(app.reverse('labels'));
       }

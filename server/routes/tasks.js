@@ -2,12 +2,12 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
-import TasksService from '../services/TasksService';
+import TaskService from '../services/TaskService';
 
 const resource = '/tasks';
 
 export default (app) => {
-  const tasksService = new TasksService();
+  const tasksService = new TaskService(app);
   app
     .get(
       resource,

@@ -1,11 +1,9 @@
-import models from '../models';
-import Label from '../models/Label';
-
 const relations = '[status, creator, executor, labels]';
 
-export default class TasksService {
-  constructor() {
-    this.model = models.Task;
+export default class TaskService {
+  constructor(app) {
+    this.model = app.objection.models.task;
+    this.labelModel = app.objection.models.label;
   }
 
   async getAll() {
@@ -23,7 +21,7 @@ export default class TasksService {
 
   async upsert(labelsIds, task) {
     const returnValue = await this.model.transaction(async (trx) => {
-      const labels = await Label.query(trx).findByIds(labelsIds);
+      const labels = await this.labelModel.query(trx).findByIds(labelsIds);
       return this.model
         .query(trx)
         .upsertGraphAndFetch(

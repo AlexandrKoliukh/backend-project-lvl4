@@ -2,16 +2,18 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
+import TaskStatusService from '../services/TaskStatusService';
 
 const resource = '/task-statuses';
 
 export default (app) => {
+  const taskStatusService = new TaskStatusService(app);
   app
     .get(
       resource,
       { name: 'taskStatuses', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const taskStatuses = await app.objection.models.taskStatus.query();
+        const taskStatuses = await taskStatusService.getAll();
         reply.render('taskStatuses/index', { taskStatuses });
       }
     )
@@ -20,9 +22,7 @@ export default (app) => {
       { name: 'taskStatuses/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskStatusId = _.toNumber(req.params.id);
-        const taskStatus = await app.objection.models.taskStatus
-          .query()
-          .findById(taskStatusId);
+        const taskStatus = await taskStatusService.getById(taskStatusId);
 
         reply.render('taskStatuses/edit', { taskStatus });
       }
@@ -43,12 +43,13 @@ export default (app) => {
           req.body.taskStatus
         );
         try {
-          await app.objection.models.taskStatus.query().insert(taskStatus);
+          await taskStatusService.insert(req.body.taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.new.success'));
           reply.redirect(app.reverse('taskStatuses'));
-        } catch ({ data }) {
+        } catch (e) {
+          reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.render('taskStatuses', { taskStatus, errors: data });
+          reply.render('taskStatuses/new', { taskStatus, errors: e.data });
         }
       }
     )
@@ -57,16 +58,17 @@ export default (app) => {
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskStatusId = _.toNumber(req.params.id);
+        const { taskStatus } = req.body;
 
         try {
-          const { taskStatus } = req.body;
-          const oldTaskStatus = await app.objection.models.taskStatus
-            .query()
-            .findById(taskStatusId);
-          await oldTaskStatus.$query().patchAndFetch(taskStatus);
+          await taskStatusService.update(taskStatusId, taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.edit.success'));
         } catch (e) {
+          reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
+          reply.redirect(
+            app.reverse('taskStatuses/edit', { taskStatus, errors: e.data })
+          );
         }
 
         reply.redirect(app.reverse('taskStatuses'));
@@ -76,9 +78,14 @@ export default (app) => {
       `${resource}/:id`,
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const taskStatusId = _.toNumber(req.params.id);
-        await app.objection.models.taskStatus.query().deleteById(taskStatusId);
-        req.flash('info', i18next.t('flash.taskStatus.delete.success'));
+        try {
+          const taskStatusId = _.toNumber(req.params.id);
+          await taskStatusService.delete(taskStatusId);
+          req.flash('info', i18next.t('flash.taskStatus.delete.success'));
+        } catch (e) {
+          reply.log.error(e);
+          req.flash('error', i18next.t('flash.errors.common'));
+        }
 
         reply.redirect(app.reverse('taskStatuses'));
       }
