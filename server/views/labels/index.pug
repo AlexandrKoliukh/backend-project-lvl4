@@ -1,0 +1,57 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.label.table')
+
+block content
+    a.btn.btn-primary.float-right(href='/labels/new')= t('buttons.new')
+    table.table.table-striped
+        thead
+            tr
+                th= t('views.label.id')
+                th= t('views.label.name')
+                th= ''
+        tbody
+          each label in labels
+              tr
+                  td= label.id
+                  td= label.name
+                  td.d-flex.flex-column
+                    a.mb-1(
+                        href='#'
+                        data-toggle='modal'
+                        data-target='#deleteLabel'
+                        data-label-id= label.id
+                        onclick='document.querySelector("#deleteLabel").dataset.labelId = this.dataset.labelId;'
+                    )= t('buttons.delete')
+                    a(href='/labels/' + label.id)= t('buttons.edit')
+
+    #deleteLabel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    .container
+                        h5.modal-title.text-center= t('views.label.delete')
+                .modal-body
+                    form(method='post', name='deleteLabel')
+                        input(
+                            name="_method"
+                            type="hidden"
+                            value='DELETE'
+                        )
+                        .d-flex.justify-content-between
+                            button.btn.btn-primary(
+                                type='button'
+                                data-dismiss='modal'
+                            )= t('buttons.cancel')
+                            button.btn.btn-danger(
+                                type='submit'
+                            )=t('buttons.delete')
+
+    script.
+        const deleteLabelModal = document.getElementById('deleteLabel');
+        deleteLabelModal.addEventListener('shown.bs.modal', function () {
+          const form = document.deleteLabel;
+          form.action = `/labels/${deleteLabelModal.dataset.labelId}`;
+        })

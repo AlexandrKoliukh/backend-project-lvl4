@@ -23,6 +23,7 @@ describe('task crud', () => {
       description: faker.lorem.paragraph(),
       statusId: 1,
       creatorId: 1,
+      labels: ['1', '2'],
     };
 
     await server.inject({

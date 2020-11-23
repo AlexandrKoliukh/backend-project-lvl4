@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Model } from 'objection';
 import TaskStatus from './TaskStatus';
 import User from './User';
+import Label from './Label';
 
 export default class Task extends Model {
   static get tableName() {
@@ -44,6 +45,18 @@ export default class Task extends Model {
         join: {
           from: 'tasks.executorId',
           to: 'users.id',
+        },
+      },
+      labels: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Label,
+        join: {
+          from: 'tasks.id',
+          through: {
+            from: 'tasks_labels.taskId',
+            to: 'tasks_labels.labelId',
+          },
+          to: 'labels.id',
         },
       },
     };

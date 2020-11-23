@@ -1,6 +1,7 @@
 import models from '../models';
+import Label from '../models/Label';
 
-const relations = '[status, creator, executor]';
+const relations = '[status, creator, executor, labels]';
 
 export default class TasksService {
   constructor() {
@@ -12,22 +13,6 @@ export default class TasksService {
     return data;
   }
 
-  async getByExecutorId(id) {
-    const data = await this.model
-      .query()
-      .where('executor_id', id)
-      .withGraphJoined(relations);
-    return data;
-  }
-
-  async getByCreatorId(id) {
-    const data = await this.model
-      .query()
-      .where('creator_id', id)
-      .withGraphJoined(relations);
-    return data;
-  }
-
   async getById(id) {
     const data = await this.model
       .query()
@@ -36,25 +21,39 @@ export default class TasksService {
     return data;
   }
 
+  async upsert(labelsIds, task) {
+    const returnValue = await this.model.transaction(async (trx) => {
+      const labels = await Label.query(trx).findByIds(labelsIds);
+      return this.model
+        .query(trx)
+        .upsertGraphAndFetch(
+          { ...task, labels },
+          { relate: true, unrelate: true, noUpdate: ['labels'] }
+        );
+    });
+    return returnValue;
+  }
+
   async insert(newData) {
-    const data = await this.model
-      .query()
-      .insert(newData)
-      .withGraphJoined(relations);
-    return data;
+    const { labels: labelsIds, ...task } = newData;
+
+    return this.upsert(labelsIds, task);
   }
 
   async update(id, newData) {
-    const oldTask = await this.getById(id);
-    const updated = await oldTask
-      .$query()
-      .patchAndFetch(newData)
-      .withGraphJoined(relations);
-    return updated;
+    const { labels: labelsIds, ...taskData } = newData;
+    const task = { ...taskData, id };
+
+    return this.upsert(labelsIds, task);
   }
 
   async delete(id) {
-    await this.model.query().deleteById(id);
-    return id;
+    const returnValue = await this.model.transaction(async (trx) => {
+      const task = await this.model.query(trx).findById(id);
+      await task.$relatedQuery('labels', trx).unrelate().where({ taskId: id });
+      await task.$query(trx).delete();
+      return id;
+    });
+    return returnValue;
   }
 }

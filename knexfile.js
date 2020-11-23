@@ -6,13 +6,9 @@ const { knexSnakeCaseMappers } = require('objection');
 const migrations = {
   directory: path.resolve('server', 'migrations'),
 };
-const seeds = {
-  directory: path.resolve('server', 'seeds'),
-};
 
 const common = {
   migrations,
-  seeds,
   ...knexSnakeCaseMappers(),
 };
 
@@ -22,17 +18,26 @@ module.exports = {
     connection: {
       filename: './database.sqlite',
     },
+    seeds: {
+      directory: path.resolve('server', 'seeds/dev'),
+    },
     ...common,
   },
   test: {
     client: 'sqlite3',
     connection: ':memory:',
     debug: false,
+    seeds: {
+      directory: path.resolve('server', 'seeds/test'),
+    },
     ...common,
   },
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
+    seeds: {
+      directory: path.resolve('server', 'seeds/prod'),
+    },
     ...common,
   },
 };

@@ -1,0 +1,16 @@
+extends ../layouts/application.pug
+
+block header
+    div.text-center
+        = t('views.label.edit')
+
+block content
+    div.w-50.mx-auto
+        form(action=`/labels/${label.id}`, method='post')
+            input(
+                name="_method"
+                type="hidden"
+                value='patch'
+            )
+            +input(label, 'name', errors)(required)
+            +submit()(value=t('buttons.save'))
