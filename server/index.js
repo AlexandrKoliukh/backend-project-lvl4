@@ -142,9 +142,7 @@ const registerPlugins = (app) => {
 
 export default () => {
   const app = fastify({
-    logger: {
-      prettyPrint: true,
-    },
+    logger: true,
   });
 
   registerPlugins(app);
