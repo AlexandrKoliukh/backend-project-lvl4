@@ -16,7 +16,7 @@ block content
         .container
             .row.p-1
                 .col= t('views.task.creator')
-                .col= task.executor && task.creator.email
+                .col= task.creator && task.creator.email
             .row.p-1
                 .col= t('views.task.executor')
                 .col= task.executor ? task.executor.email : t('views.task.nonExecutor')
