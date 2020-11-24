@@ -39,14 +39,14 @@ export default (app) => {
       resource,
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const taskStatus = await app.objection.models.taskStatus.fromJson(
-          req.body.taskStatus
-        );
         try {
           await taskStatusService.insert(req.body.taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.new.success'));
           reply.redirect(app.reverse('taskStatuses'));
         } catch (e) {
+          const taskStatus = await app.objection.models.taskStatus.fromJson(
+            req.body.taskStatus
+          );
           reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
           reply.render('taskStatuses/new', { taskStatus, errors: e.data });
@@ -63,12 +63,11 @@ export default (app) => {
         try {
           await taskStatusService.update(taskStatusId, taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.edit.success'));
+          reply.redirect(app.reverse('taskStatuses'));
         } catch (e) {
           reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.redirect(
-            app.reverse('taskStatuses/edit', { taskStatus, errors: e.data })
-          );
+          reply.render('taskStatuses/edit', { taskStatus, errors: e.data });
         }
 
         reply.redirect(app.reverse('taskStatuses'));

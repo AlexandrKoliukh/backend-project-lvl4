@@ -6,6 +6,8 @@ import UserService from '../services/UserService';
 
 export default (app) => {
   const userService = new UserService(app);
+  const keys = ['firstName', 'lastName', 'email'];
+
   app
     .get('/users', { name: 'users' }, async (req, reply) => {
       const users = await userService.getAll();
@@ -19,7 +21,6 @@ export default (app) => {
         const userId = _.toNumber(req.params.id);
 
         const user = await userService.getById(userId);
-        const keys = ['firstName', 'lastName', 'email'];
 
         reply.render('users/edit', { user, keys });
       }
@@ -42,9 +43,9 @@ export default (app) => {
     })
     .patch('/users/:id', async (req, reply) => {
       const userId = _.toNumber(req.params.id);
+      const { password, user: newUserData } = req.body;
 
       try {
-        const { password, user: newUserData } = req.body;
         const oldUser = await userService.getById(userId);
         const patchObject = _.keys(newUserData).reduce((acc, i) => {
           if (newUserData[i] === oldUser[i]) return acc;
@@ -57,11 +58,12 @@ export default (app) => {
         const updatedUser = await userService.update(userId, patchObject);
         req.session.set('email', updatedUser.email);
         req.flash('info', i18next.t('flash.user.update.success'));
+        reply.redirect(app.reverse('userProfile', { id: userId }));
       } catch (e) {
         reply.log.error(e);
         req.flash('error', i18next.t('flash.user.update.error'));
+        reply.render('users/edit', { user: newUserData, keys, errors: e.data });
       }
-
       reply.redirect(app.reverse('userProfile', { id: userId }));
     })
     .delete('/users/:id', async (req, reply) => {

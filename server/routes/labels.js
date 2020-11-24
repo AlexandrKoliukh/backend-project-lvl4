@@ -24,6 +24,11 @@ export default (app) => {
         const labelId = _.toNumber(req.params.id);
         const label = await labelService.getById(labelId);
 
+        if (!label) {
+          reply.code(404);
+          reply.redirect(app.reverse('labels'));
+        }
+
         reply.render('labels/edit', { label });
       }
     )
@@ -40,12 +45,14 @@ export default (app) => {
       resource,
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const label = await app.objection.models.label.fromJson(req.body.label);
         try {
           await labelService.insert(req.body.label);
           req.flash('info', i18next.t('flash.label.new.success'));
           reply.redirect(app.reverse('labels'));
         } catch (e) {
+          const label = await app.objection.models.label.fromJson(
+            req.body.label
+          );
           reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));
           reply.render('labels/new', { label, errors: e.data });
@@ -62,6 +69,7 @@ export default (app) => {
         try {
           await labelService.update(labelId, label);
           req.flash('info', i18next.t('flash.label.edit.success'));
+          reply.redirect(app.reverse('labels'));
         } catch (e) {
           reply.log.error(e);
           req.flash('error', i18next.t('flash.errors.common'));

@@ -32,7 +32,7 @@ mixin textarea(entity, propertyName, errors = [])
 
 mixin select(entity, propertyName, options, value, caption, notSelectedCaption = '', errors = [])
   -
-    let error = _.get(errors, propertyName)
+    const error = _.get(errors, propertyName)
     let id;
     const propertyIdData = _.get(entity, propertyName, '')
     if (_.isArray(propertyIdData)) id = _.map(propertyIdData, (i) => i.id)
@@ -48,10 +48,12 @@ mixin select(entity, propertyName, options, value, caption, notSelectedCaption =
       if (notSelectedCaption)
         option(value='')= notSelectedCaption
       for item in options
-        if (_.isArray(id))
-          option(value=item[value], selected= _.includes(id, item[value]))= item[caption]
-        else
-          option(value=item[value], selected= id == item[value])= item[caption]
+        -
+          const itemValue = _.get(item, value);
+          const itemCaption = _.get(item, caption);
+          const isSelected = _.isArray(id) ? _.includes(id, itemValue) : id === itemValue;
+
+        option(value=itemValue, selected=isSelected)= itemCaption
     if error
       .form-control-feedback.text-danger= error.map(({ message }) => message).join('. ')
 
