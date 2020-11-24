@@ -5,7 +5,7 @@ block content
         .d-flex.flex-column
             h3.mb-3.font-weight-normal.text-center
                 = t('views.user.profile')
-            form(action=`/users/${currUserId}`, method='post')
+            form(action=route('users/edit', { id: currUserId }), method='post')
                 input(
                     name="_method"
                     type="hidden"
@@ -33,10 +33,7 @@ block content
                                 type='button'
                                 data-dismiss='modal'
                             )= t('buttons.cancel')
-                            form(
-                                action=`/users/${currUserId}`
-                                method='post'
-                            )
+                            form(method='post')
                                 input(
                                     name="_method"
                                     type="hidden"

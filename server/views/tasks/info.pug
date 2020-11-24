@@ -31,7 +31,7 @@ block content
                 data-toggle='modal'
                 data-target='#deleteTask'
             )= t('buttons.delete')
-            a.btn.btn-primary(href=`/tasks/${task.id}/edit`)= t('buttons.edit')
+            a.btn.btn-primary(href=route('tasks/edit', { id: task.id }))= t('buttons.edit')
 
 
     #deleteTask.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteTask' aria-hidden='true')
@@ -41,7 +41,7 @@ block content
                     .container
                         h5.modal-title.text-center= t('views.task.delete')
                 .modal-body
-                    form(method='POST')
+                    form(method='POST', action=route('tasks/edit', { id:task.id }))
                         input(
                             name="_method"
                             type="hidden"

@@ -16,7 +16,7 @@ export default (app) => {
     })
     .get(
       '/users/:id',
-      { name: 'userProfile', preHandler: app.auth([app.verifySession]) },
+      { name: 'users/edit', preHandler: app.auth([app.verifySession]) },
       async (req, reply) => {
         const userId = _.toNumber(req.params.id);
 
@@ -25,7 +25,7 @@ export default (app) => {
         reply.render('users/edit', { user, keys });
       }
     )
-    .get('/users/new', { name: 'newUser' }, (req, reply) => {
+    .get('/users/new', { name: 'users/new' }, (req, reply) => {
       const user = new app.objection.models.user();
       reply.render('users/new', { user });
     })
@@ -58,20 +58,20 @@ export default (app) => {
         const updatedUser = await userService.update(userId, patchObject);
         req.session.set('email', updatedUser.email);
         req.flash('info', i18next.t('flash.user.update.success'));
-        reply.redirect(app.reverse('userProfile', { id: userId }));
+        reply.redirect(app.reverse('users/edit', { id: userId }));
       } catch (e) {
         reply.log.error(e);
         req.flash('error', i18next.t('flash.user.update.error'));
         reply.render('users/edit', { user: newUserData, keys, errors: e.data });
       }
-      reply.redirect(app.reverse('userProfile', { id: userId }));
+      reply.redirect(app.reverse('users/edit', { id: userId }));
     })
     .delete('/users/:id', async (req, reply) => {
       try {
         const paramsUserId = _.toNumber(req.params.id);
         await userService.delete(paramsUserId);
-        req.session.delete();
         req.flash('info', i18next.t('flash.user.delete.success'));
+        req.session.delete();
       } catch (e) {
         reply.log.error(e);
         req.flash('error', i18next.t('flash.user.delete.error'));

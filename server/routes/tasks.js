@@ -37,7 +37,7 @@ export default (app) => {
       }
     )
     .get(
-      `${resource}/:id`,
+      `${resource}/:id/info`,
       { name: 'tasks/info', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
@@ -47,7 +47,7 @@ export default (app) => {
       }
     )
     .get(
-      `${resource}/:id/edit`,
+      `${resource}/:id`,
       { name: 'tasks/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);

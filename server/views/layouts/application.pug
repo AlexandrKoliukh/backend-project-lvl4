@@ -35,15 +35,15 @@ html(lang="en").h-100
           if reply.request.signedIn
             li.nav-item
               a.nav-link(
-                href=`/users/${currUserId}`
+                href=route('users/edit', { id: currUserId })
               ) !{reply.request.session.get('email')}
             li.nav-item
               +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
           else
             li.nav-item
-              a.nav-link(href=route('newSession'))= t('layouts.application.signIn')
+              a.nav-link(href=route('session/new'))= t('layouts.application.signIn')
             li.nav-item
-              a.nav-link(href=route('newUser'))= t('layouts.application.signUp')
+              a.nav-link(href=route('users/new'))= t('layouts.application.signUp')
     .container.h-100
 
       each messages, type in reply.flash() || []

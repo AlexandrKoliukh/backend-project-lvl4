@@ -5,7 +5,7 @@ block header
         = t('views.label.table')
 
 block content
-    a.btn.btn-primary.float-right(href='/labels/new')= t('buttons.new')
+    a.btn.btn-primary.float-right(href=route('labels/new'))= t('buttons.new')
     table.table.table-striped
         thead
             tr
@@ -25,7 +25,7 @@ block content
                         data-label-id= label.id
                         onclick='document.querySelector("#deleteLabel").dataset.labelId = this.dataset.labelId;'
                     )= t('buttons.delete')
-                    a(href='/labels/' + label.id)= t('buttons.edit')
+                    a(href=route('labels/edit', { id: label.id }))= t('buttons.edit')
 
     #deleteLabel.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteLabel' aria-hidden='true')
         .modal-dialog(role='document')
@@ -34,7 +34,7 @@ block content
                     .container
                         h5.modal-title.text-center= t('views.label.delete')
                 .modal-body
-                    form(method='post', name='deleteLabel')
+                    form(method='post', name='deleteLabel', action=route('labels'))
                         input(
                             name="_method"
                             type="hidden"
@@ -53,5 +53,5 @@ block content
         const deleteLabelModal = document.getElementById('deleteLabel');
         deleteLabelModal.addEventListener('shown.bs.modal', function () {
           const form = document.deleteLabel;
-          form.action = `/labels/${deleteLabelModal.dataset.labelId}`;
+          form.action += `/${deleteLabelModal.dataset.labelId}`;
         })

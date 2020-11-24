@@ -5,7 +5,7 @@ block header
         = t('views.taskStatus.table')
 
 block content
-    a.btn.btn-primary.float-right(href='/task-statuses/new')= t('buttons.new')
+    a.btn.btn-primary.float-right(href=route('taskStatuses/new'))= t('buttons.new')
     table.table.table-striped
         thead
             tr
@@ -25,7 +25,7 @@ block content
                         data-task-status-id= taskStatus.id
                         onclick='document.querySelector("#deleteTaskStatus").dataset.taskStatusId = this.dataset.taskStatusId;'
                     )= t('buttons.delete')
-                    a(href='/task-statuses/' + taskStatus.id)= t('buttons.edit')
+                    a(href=route('taskStatuses/edit', { id: taskStatus.id }))= t('buttons.edit')
 
     #deleteTaskStatus.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteTaskStatus' aria-hidden='true')
         .modal-dialog(role='document')
@@ -34,7 +34,7 @@ block content
                     .container
                         h5.modal-title.text-center= t('views.taskStatus.delete')
                 .modal-body
-                    form(method='post', name='deleteTaskStatus')
+                    form(method='post', name='deleteTaskStatus', action=route('taskStatuses'))
                         input(
                             name="_method"
                             type="hidden"
@@ -53,5 +53,5 @@ block content
         const deleteTaskStatusModal = document.getElementById('deleteTaskStatus');
         deleteTaskStatusModal.addEventListener('shown.bs.modal', function () {
           const form = document.deleteTaskStatus;
-          form.action = `/task-statuses/${deleteTaskStatusModal.dataset.taskStatusId}`;
+          form.action += `/${deleteTaskStatusModal.dataset.taskStatusId}`;
         })

@@ -29,12 +29,17 @@ block content
                       option(value=taskStatus.id, selected= getFilterValue('statusId') == taskStatus.id)= taskStatus.name
             .col-auto.mt-3
                 .form-check
-                    input#currentUser.form-check-input(type='checkbox', name='creatorId', value= currUserId, checked= getFilterValue('creatorId') == currUserId)
+                    input#currentUser.form-check-input(
+                        type='checkbox',
+                        name='creatorId',
+                        value= currUserId,
+                        checked= getFilterValue('creatorId') == currUserId
+                    )
                     label.form-check-label(for='currentUser')= t('views.task.filter.toMe')
             .col-auto
                 button.btn.btn-primary.mr-3(type='submit')= t('buttons.submit')
 
-    a.btn.btn-primary.float-right.mt-3(href='/tasks/new')= t('buttons.new')
+    a.btn.btn-primary.float-right.mt-3(href=route('tasks/new'))= t('buttons.new')
     table.table.table-striped
         thead
             tr
@@ -47,7 +52,7 @@ block content
           each task in tasks
               tr
                   td
-                    a(href=`/tasks/${task.id}`)= task.name
+                    a(href=route('tasks/info', { id: task.id }))= task.name
                   td
                     for label in task.labels
                       .badge.bg-secondary.m-1= label.name

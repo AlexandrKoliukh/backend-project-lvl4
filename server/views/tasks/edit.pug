@@ -6,7 +6,7 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(action=`${route('tasks')}/${task.id}` method='post')
+        form(method='post')
             input(
                 name="_method"
                 type="hidden"
