@@ -14,6 +14,8 @@ export default class TaskService {
       .modify('filterCreator', filter.creatorId)
       .modify('filterLabel', filter.labelId)
       .modify('filterStatus', filter.statusId);
+
+    console.log(data);
     return data;
   }
 
