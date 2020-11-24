@@ -30,7 +30,10 @@ export default class Task extends BaseModel {
 
       filterLabel(query, id) {
         query.skipUndefined().whereIn('tasks.id', function () {
-          this.select('taskId').from('tasks_labels').where('labelId', id);
+          this.select('taskId')
+            .from('tasks_labels')
+            .skipUndefined()
+            .where('labelId', id);
         });
       },
 
