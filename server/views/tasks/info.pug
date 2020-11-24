@@ -16,13 +16,13 @@ block content
         .container
             .row.p-1
                 .col= t('views.task.creator')
-                .col= task.creator.email
+                .col= task.executor && task.creator.email
             .row.p-1
                 .col= t('views.task.executor')
                 .col= task.executor ? task.executor.email : t('views.task.nonExecutor')
             .row.p-1
                 .col= t('views.task.status')
-                .col= task.status.name
+                .col= task.status && task.status.name
         hr.my-4
 
         .d-flex.justify-content-between

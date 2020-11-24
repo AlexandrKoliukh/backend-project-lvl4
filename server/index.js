@@ -127,7 +127,8 @@ const registerPlugins = (app) => {
   app.register(fastifyReverseRoutes);
   app.register(fastifyFormbody);
   app.register(fastifySecureSession, {
-    secret: 'a secret with minimum length of 32 characters',
+    secret:
+      process.env.SECRET || 'a secret with minimum length of 32 characters',
     cookie: {
       path: '/',
     },
