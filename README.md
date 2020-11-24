@@ -5,6 +5,10 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/e3da255bc4f555593e79/test_coverage)](https://codeclimate.com/github/AlexandrKoliukh/backend-project-lvl4/test_coverage)
 [![Heroku App Status](http://heroku-shields.herokuapp.com/alk-tasks)](https://alk-tasks.herokuapp.com)
 
+## Demo
+
+https://alk-tasks.herokuapp.com/
+
 ## Setup
 
 ```sh
