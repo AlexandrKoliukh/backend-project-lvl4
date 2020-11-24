@@ -3,18 +3,37 @@
 import i18next from 'i18next';
 import _ from 'lodash';
 import TaskService from '../services/TaskService';
+import UserService from '../services/UserService';
+import TaskStatusService from '../services/TaskStatusService';
+import LabelService from '../services/LabelService';
+import { parseFilters } from '../lib/parseFilters';
 
 const resource = '/tasks';
 
 export default (app) => {
   const tasksService = new TaskService(app);
+  const usersService = new UserService(app);
+  const taskStatusesService = new TaskStatusService(app);
+  const labelsService = new LabelService(app);
   app
     .get(
       resource,
       { name: 'tasks', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const tasks = await tasksService.getAll();
-        reply.render('tasks/index', { tasks });
+        const filters = parseFilters(req.query);
+
+        const tasks = await tasksService.getAll(filters);
+        const users = await usersService.getAll();
+        const taskStatuses = await taskStatusesService.getAll();
+        const labels = await labelsService.getAll();
+
+        reply.render('tasks/index', {
+          tasks,
+          users,
+          taskStatuses,
+          labels,
+          filters,
+        });
       }
     )
     .get(
@@ -33,9 +52,9 @@ export default (app) => {
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
         const task = await tasksService.getById(taskId);
-        const users = await app.objection.models.user.query();
-        const taskStatuses = await app.objection.models.taskStatus.query();
-        const labels = await app.objection.models.label.query();
+        const users = await usersService.getAll();
+        const taskStatuses = await taskStatusesService.getAll();
+        const labels = await labelsService.getAll();
 
         reply.render('tasks/edit', { task, users, taskStatuses, labels });
       }
@@ -64,9 +83,8 @@ export default (app) => {
         } catch (err) {
           req.log.error(err);
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.render('tasks', { task, errors: err.data });
+          reply.redirect(app.reverse('tasks/new', { task, errors: err.data }));
         }
-        reply.code(204);
       }
     )
     .patch(
@@ -81,7 +99,6 @@ export default (app) => {
           await tasksService.update(taskId, task);
           req.flash('info', i18next.t('flash.task.edit.success'));
         } catch ({ data }) {
-          console.log(data);
           req.flash('error', i18next.t('flash.errors.common'));
           reply.redirect(app.reverse('tasks/info', { errors: data }));
         }

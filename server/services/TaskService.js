@@ -6,8 +6,14 @@ export default class TaskService {
     this.labelModel = app.objection.models.label;
   }
 
-  async getAll() {
-    const data = await this.model.query().withGraphJoined(relations);
+  async getAll(filter) {
+    const data = await this.model
+      .query()
+      .withGraphJoined(relations)
+      .modify('filterExecutor', filter.executorId)
+      .modify('filterCreator', filter.creatorId)
+      .modify('filterLabel', filter.labelId)
+      .modify('filterStatus', filter.statusId);
     return data;
   }
 
@@ -19,7 +25,7 @@ export default class TaskService {
     return data;
   }
 
-  async upsert(labelsIds, task) {
+  async upsert(labelsIds = [], task) {
     const returnValue = await this.model.transaction(async (trx) => {
       const labels = await this.labelModel.query(trx).findByIds(labelsIds);
       return this.model

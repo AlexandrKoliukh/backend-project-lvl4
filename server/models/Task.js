@@ -14,7 +14,27 @@ export default class Task extends BaseModel {
 
     return {
       ...json,
-      executorId: _.toNumber(json.executor_id) || null,
+      executorId: _.toNumber(json.executorId) || null,
+    };
+  }
+
+  static get modifiers() {
+    return {
+      filterExecutor(query, id) {
+        query.skipUndefined().where('executorId', id);
+      },
+
+      filterCreator(query, id) {
+        query.skipUndefined().where('creatorId', id);
+      },
+
+      filterLabel(query, id) {
+        query.skipUndefined().where('labels.id', id);
+      },
+
+      filterStatus(query, id) {
+        query.skipUndefined().where('statusId', id);
+      },
     };
   }
 

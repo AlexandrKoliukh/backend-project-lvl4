@@ -9,6 +9,7 @@ module.exports = {
       new: 'Создать',
       edit: 'Редактировать',
       submit: 'Применить',
+      reset: 'Очистить',
     },
     flash: {
       errors: {
@@ -105,6 +106,10 @@ module.exports = {
         edit: 'Изменить задачу',
         delete: 'Удалить задачу',
         info: 'Информация о задаче',
+        filter: {
+          filter: 'Фильтр',
+          toMe: 'Созданные мной',
+        },
       },
       taskStatus: {
         id: '#',
