@@ -1,6 +1,6 @@
 const relations = '[status, creator, executor, labels]';
 
-export default class TaskService {
+export default class TaskRepository {
   constructor(app) {
     this.model = app.objection.models.task;
     this.labelModel = app.objection.models.label;

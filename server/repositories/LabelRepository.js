@@ -1,6 +1,6 @@
 import Crud from './Crud';
 
-export default class LabelService extends Crud {
+export default class LabelRepository extends Crud {
   constructor(app) {
     super();
     this.model = app.objection.models.label;

@@ -2,18 +2,18 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
-import LabelService from '../services/LabelService';
+import LabelRepository from '../repositories/LabelRepository';
 
 const resource = '/labels';
 
 export default (app) => {
-  const labelService = new LabelService(app);
+  const labelRepository = new LabelRepository(app);
   app
     .get(
       resource,
       { name: 'labels', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const labels = await labelService.getAll();
+        const labels = await labelRepository.getAll();
         reply.render('labels/index', { labels });
       }
     )
@@ -22,7 +22,7 @@ export default (app) => {
       { name: 'labels/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
-        const label = await labelService.getById(labelId);
+        const label = await labelRepository.getById(labelId);
 
         if (!label) {
           reply.code(404);
@@ -46,7 +46,7 @@ export default (app) => {
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         try {
-          await labelService.insert(req.body.label);
+          await labelRepository.insert(req.body.label);
           req.flash('info', i18next.t('flash.label.new.success'));
           reply.redirect(app.reverse('labels'));
         } catch (e) {
@@ -67,7 +67,7 @@ export default (app) => {
         const { label } = req.body;
 
         try {
-          await labelService.update(labelId, label);
+          await labelRepository.update(labelId, label);
           req.flash('info', i18next.t('flash.label.edit.success'));
           reply.redirect(app.reverse('labels'));
         } catch (e) {
@@ -85,7 +85,7 @@ export default (app) => {
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
         try {
-          await labelService.delete(labelId);
+          await labelRepository.delete(labelId);
           req.flash('info', i18next.t('flash.label.delete.success'));
         } catch (e) {
           reply.log.error(e);

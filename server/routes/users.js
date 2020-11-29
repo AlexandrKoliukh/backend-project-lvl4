@@ -2,15 +2,15 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
-import UserService from '../services/UserService';
+import UserRepository from '../repositories/UserRepository';
 
 export default (app) => {
-  const userService = new UserService(app);
+  const userRepository = new UserRepository(app);
   const keys = ['firstName', 'lastName', 'email'];
 
   app
     .get('/users', { name: 'users' }, async (req, reply) => {
-      const users = await userService.getAll();
+      const users = await userRepository.getAll();
 
       reply.render('users/index', { users });
     })
@@ -20,7 +20,7 @@ export default (app) => {
       async (req, reply) => {
         const userId = _.toNumber(req.params.id);
 
-        const user = await userService.getById(userId);
+        const user = await userRepository.getById(userId);
 
         reply.render('users/edit', { user, keys });
       }
@@ -32,7 +32,7 @@ export default (app) => {
     .post('/users', async (req, reply) => {
       const user = await app.objection.models.user.fromJson(req.body.user);
       try {
-        await userService.insert(req.body.user);
+        await userRepository.insert(req.body.user);
         req.flash('info', i18next.t('flash.user.create.success'));
         reply.redirect(app.reverse('root'));
       } catch (e) {
@@ -46,7 +46,7 @@ export default (app) => {
       const { password, user: newUserData } = req.body;
 
       try {
-        const oldUser = await userService.getById(userId);
+        const oldUser = await userRepository.getById(userId);
         const patchObject = _.keys(newUserData).reduce((acc, i) => {
           if (newUserData[i] === oldUser[i]) return acc;
           return { ...acc, [i]: newUserData[i] };
@@ -55,7 +55,7 @@ export default (app) => {
         if (password) {
           patchObject.password = password;
         }
-        const updatedUser = await userService.update(userId, patchObject);
+        const updatedUser = await userRepository.update(userId, patchObject);
         req.session.set('email', updatedUser.email);
         req.flash('info', i18next.t('flash.user.update.success'));
         reply.redirect(app.reverse('users/edit', { id: userId }));
@@ -69,7 +69,7 @@ export default (app) => {
     .delete('/users/:id', async (req, reply) => {
       try {
         const paramsUserId = _.toNumber(req.params.id);
-        await userService.delete(paramsUserId);
+        await userRepository.delete(paramsUserId);
         req.flash('info', i18next.t('flash.user.delete.success'));
         req.session.delete();
       } catch (e) {

@@ -2,18 +2,18 @@
 
 import i18next from 'i18next';
 import _ from 'lodash';
-import TaskStatusService from '../services/TaskStatusService';
+import TaskStatusRepository from '../repositories/TaskStatusRepository';
 
 const resource = '/task-statuses';
 
 export default (app) => {
-  const taskStatusService = new TaskStatusService(app);
+  const taskStatusRepository = new TaskStatusRepository(app);
   app
     .get(
       resource,
       { name: 'taskStatuses', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
-        const taskStatuses = await taskStatusService.getAll();
+        const taskStatuses = await taskStatusRepository.getAll();
         reply.render('taskStatuses/index', { taskStatuses });
       }
     )
@@ -22,7 +22,7 @@ export default (app) => {
       { name: 'taskStatuses/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskStatusId = _.toNumber(req.params.id);
-        const taskStatus = await taskStatusService.getById(taskStatusId);
+        const taskStatus = await taskStatusRepository.getById(taskStatusId);
 
         reply.render('taskStatuses/edit', { taskStatus });
       }
@@ -40,7 +40,7 @@ export default (app) => {
       { preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         try {
-          await taskStatusService.insert(req.body.taskStatus);
+          await taskStatusRepository.insert(req.body.taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.new.success'));
           reply.redirect(app.reverse('taskStatuses'));
         } catch (e) {
@@ -61,7 +61,7 @@ export default (app) => {
         const { taskStatus } = req.body;
 
         try {
-          await taskStatusService.update(taskStatusId, taskStatus);
+          await taskStatusRepository.update(taskStatusId, taskStatus);
           req.flash('info', i18next.t('flash.taskStatus.edit.success'));
           reply.redirect(app.reverse('taskStatuses'));
         } catch (e) {
@@ -79,7 +79,7 @@ export default (app) => {
       async (req, reply) => {
         try {
           const taskStatusId = _.toNumber(req.params.id);
-          await taskStatusService.delete(taskStatusId);
+          await taskStatusRepository.delete(taskStatusId);
           req.flash('info', i18next.t('flash.taskStatus.delete.success'));
         } catch (e) {
           reply.log.error(e);
