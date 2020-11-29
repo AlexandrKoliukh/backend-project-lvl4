@@ -18,7 +18,7 @@ export default (app) => {
       }
     )
     .get(
-      `${resource}/:id`,
+      `${resource}/:id/edit`,
       { name: 'taskStatuses/edit', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskStatusId = _.toNumber(req.params.id);

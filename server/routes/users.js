@@ -15,7 +15,7 @@ export default (app) => {
       reply.render('users/index', { users });
     })
     .get(
-      '/users/:id',
+      '/users/:id/edit',
       { name: 'users/edit', preHandler: app.auth([app.verifySession]) },
       async (req, reply) => {
         const userId = _.toNumber(req.params.id);
