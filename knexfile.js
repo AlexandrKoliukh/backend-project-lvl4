@@ -9,6 +9,7 @@ const migrations = {
 
 const common = {
   migrations,
+  useNullAsDefault: true,
   ...knexSnakeCaseMappers(),
 };
 
@@ -19,7 +20,7 @@ module.exports = {
       filename: './database.sqlite',
     },
     seeds: {
-      directory: path.resolve('server', 'seeds/dev'),
+      directory: path.resolve('server', 'seeds'),
     },
     ...common,
   },
@@ -28,16 +29,13 @@ module.exports = {
     connection: ':memory:',
     debug: false,
     seeds: {
-      directory: path.resolve('server', 'seeds/test'),
+      directory: path.resolve('server', 'seeds'),
     },
     ...common,
   },
   production: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
-    seeds: {
-      directory: path.resolve('server', 'seeds/prod'),
-    },
     ...common,
   },
 };
