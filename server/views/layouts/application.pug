@@ -10,34 +10,35 @@ html(lang="en").h-100
 
   body.h-100.d-flex.flex-column
     nav.navbar.navbar-expand-lg.navbar-light.bg-light.mb-3.px-3
-      a.navbar-brand(href=route('root'))= t('appName')
-      button.navbar-toggler(data-toggle="collapse" data-target="#navbarSupportedContent")
-        span.navbar-toggler-icon
-      .collapse.navbar-collapse
-        ul.navbar-nav
-          li.nav-item
-            a.nav-link(href=route('users'))= t('layouts.application.users')
-        ul.navbar-nav.mr-auto
-          if reply.request.signedIn
+      .container-fluid
+        a.navbar-brand(href=route('root'))= t('appName')
+        button.navbar-toggler(data-toggle="collapse" data-target="#navbarCollapse")
+          span.navbar-toggler-icon
+        #navbarCollapse.collapse.navbar-collapse
+          ul.navbar-nav
             li.nav-item
-              a.nav-link(href=route('taskStatuses'))= t('layouts.application.taskStatuses')
-            li.nav-item
-              a.nav-link(href=route('tasks'))= t('layouts.application.tasks')
-            li.nav-item
-              a.nav-link(href=route('labels'))= t('layouts.application.labels')
-        ul.navbar-nav
-          if reply.request.signedIn
-            li.nav-item
-              a.nav-link(
-                href=route('users/edit', { id: currUserId })
-              ) !{reply.request.session.get('email')}
-            li.nav-item
-              +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
-          else
-            li.nav-item
-              a.nav-link(href=route('session/new'))= t('layouts.application.signIn')
-            li.nav-item
-              a.nav-link(href=route('users/new'))= t('layouts.application.signUp')
+              a.nav-link(href=route('users'))= t('layouts.application.users')
+          ul.navbar-nav.mr-auto
+            if reply.request.signedIn
+              li.nav-item
+                a.nav-link(href=route('taskStatuses'))= t('layouts.application.taskStatuses')
+              li.nav-item
+                a.nav-link(href=route('tasks'))= t('layouts.application.tasks')
+              li.nav-item
+                a.nav-link(href=route('labels'))= t('layouts.application.labels')
+          ul.navbar-nav
+            if reply.request.signedIn
+              li.nav-item
+                a.nav-link(
+                  href=route('users/edit', { id: currUserId })
+                ) !{reply.request.session.get('email')}
+              li.nav-item
+                +buttonTo(route('session'), 'delete')(class="btn nav-link" value=t('layouts.application.signOut'))
+            else
+              li.nav-item
+                a.nav-link(href=route('session/new'))= t('layouts.application.signIn')
+              li.nav-item
+                a.nav-link(href=route('users/new'))= t('layouts.application.signUp')
     .container.h-100
 
       each messages, type in reply.flash() || []
