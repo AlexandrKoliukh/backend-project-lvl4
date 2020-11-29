@@ -6,6 +6,6 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(action=route('labels') method='post')
+        +form('post')(action=route('labels/create'))
             +input(label, 'name', errors)(required)
             +submit()(value=t('buttons.new'))

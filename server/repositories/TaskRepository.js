@@ -27,10 +27,8 @@ export default class TaskRepository {
   }
 
   async upsert(labelsIds = [], task) {
-    console.log(labelsIds);
     const returnValue = await this.model.transaction(async (trx) => {
       const labels = await this.labelModel.query(trx).findByIds(labelsIds);
-      console.log(labels);
       return this.model
         .query(trx)
         .upsertGraphAndFetch(

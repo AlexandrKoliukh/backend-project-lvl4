@@ -6,12 +6,7 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(method='post')
-            input(
-                name="_method"
-                type="hidden"
-                value='patch'
-            )
+        +form('patch')(action=route('tasks/update', { id: task.id }))
             .d-none
                 +input(task, 'creatorId', errors, currUserId)(type='hidden')
             +input(task, 'name', errors)(required)

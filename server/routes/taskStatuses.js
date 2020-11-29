@@ -37,7 +37,10 @@ export default (app) => {
     )
     .post(
       resource,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      {
+        name: 'taskStatuses/create',
+        preHandler: app.auth([app.verifySignedIn]),
+      },
       async (req, reply) => {
         try {
           await taskStatusRepository.insert(req.body.taskStatus);
@@ -55,7 +58,10 @@ export default (app) => {
     )
     .patch(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      {
+        name: 'taskStatuses/update',
+        preHandler: app.auth([app.verifySignedIn]),
+      },
       async (req, reply) => {
         const taskStatusId = _.toNumber(req.params.id);
         const { taskStatus } = req.body;
@@ -75,7 +81,10 @@ export default (app) => {
     )
     .delete(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      {
+        name: 'taskStatuses/delete',
+        preHandler: app.auth([app.verifySignedIn]),
+      },
       async (req, reply) => {
         try {
           const taskStatusId = _.toNumber(req.params.id);

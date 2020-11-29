@@ -1,17 +1,15 @@
-- const getInputName = (entity, property) => `${_.lowerFirst(entity.constructor.name)}[${property}]`
-- const getTKey = (entity, property) => `views.${_.lowerFirst(entity.constructor.name)}.${property}`
-
-mixin formFor(entity = null)
-  form&attributes(attributes)
-    block
+-
+  const getEntityName = (entity) => entity.constructor.name
+  const getInputName = (entity, property) => `${_.lowerFirst(getEntityName(entity))}[${property}]`;
+  const getTKey = (entity, property) => `views.${_.lowerFirst(getEntityName(entity))}.${property}`;
 
 mixin input(entity, propertyName, errors = [], defaultValue = '')
   - error = _.get(errors, propertyName)
-  .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
+  .form-group.mb-3
     label(for=propertyName).form-label= t(getTKey(entity, propertyName))
     input(
       name=getInputName(entity, propertyName)
-      class='form-control'
+      class= `form-control ${errors[propertyName] ? 'is-invalid' : ''}`
       id=propertyName
       value=_.get(entity, propertyName, defaultValue)
     )&attributes(attributes)
@@ -20,11 +18,11 @@ mixin input(entity, propertyName, errors = [], defaultValue = '')
 
 mixin textarea(entity, propertyName, errors = [])
   - error = _.get(errors, propertyName)
-  .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
+  .form-group.mb-3
     label(for=propertyName).form-label= t(getTKey(entity, propertyName))
     textarea(
       name=getInputName(entity, propertyName)
-      class='form-control'
+      class= `form-control ${errors[propertyName] ? 'is-invalid' : ''}`
       id=propertyName
     )&attributes(attributes)= _.get(entity, propertyName, '')
     if error
@@ -38,11 +36,11 @@ mixin select(entity, propertyName, options, value, caption, notSelectedCaption =
     if (_.isArray(propertyIdData)) id = _.map(propertyIdData, (i) => i.id)
     else id = propertyIdData
 
-  .form-group.mb-3(class=(errors[propertyName] && 'has-danger'))
+  .form-group.mb-3
     label(for=propertyName).form-label= t(getTKey(entity, propertyName))
     select(
       name=getInputName(entity, propertyName)
-      class='form-select'
+      class= `form-select ${errors[propertyName] ? 'is-invalid' : ''}`
       id=propertyName
     )&attributes(attributes)
       if (notSelectedCaption)
@@ -60,6 +58,15 @@ mixin select(entity, propertyName, options, value, caption, notSelectedCaption =
 mixin submit(form = null)
   .form-group
     input(class='btn btn-primary w-100' type='submit')&attributes(attributes)
+
+mixin form(type = 'get')
+  form(method= type.toLowerCase() === 'get' ? 'GET' : 'POST')&attributes(attributes)
+    input(
+      name="_method"
+      type="hidden"
+      value= type
+    )
+    block
 
 mixin buttonTo(action, method)
   form(action=action, method="post")

@@ -6,6 +6,6 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(action=route('taskStatuses') method='post')
+        +form('post')(action=route('taskStatuses/create'))
             +input(taskStatus, 'name', errors)(required)
             +submit()(value=t('buttons.new'))

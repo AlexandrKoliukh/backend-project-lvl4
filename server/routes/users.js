@@ -29,7 +29,7 @@ export default (app) => {
       const user = new app.objection.models.user();
       reply.render('users/new', { user });
     })
-    .post('/users', async (req, reply) => {
+    .post('/users', { name: 'users/create' }, async (req, reply) => {
       const user = await app.objection.models.user.fromJson(req.body.user);
       try {
         await userRepository.insert(req.body.user);
@@ -41,7 +41,7 @@ export default (app) => {
         reply.render('users/new', { user, errors: e.data });
       }
     })
-    .patch('/users/:id', async (req, reply) => {
+    .patch('/users/:id', { name: 'users/update' }, async (req, reply) => {
       const userId = _.toNumber(req.params.id);
       const { password, user: newUserData } = req.body;
 
@@ -66,7 +66,7 @@ export default (app) => {
       }
       reply.redirect(app.reverse('users/edit', { id: userId }));
     })
-    .delete('/users/:id', async (req, reply) => {
+    .delete('/users/:id', { name: 'users/delete' }, async (req, reply) => {
       try {
         const paramsUserId = _.toNumber(req.params.id);
         await userRepository.delete(paramsUserId);

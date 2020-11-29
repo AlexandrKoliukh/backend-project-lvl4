@@ -38,12 +38,12 @@ export default (app) => {
     )
     .get(
       `${resource}/:id`,
-      { name: 'tasks/info', preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'tasks/show', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
         const task = await tasksRepository.getById(taskId);
 
-        reply.render('tasks/info', { task });
+        reply.render('tasks/show', { task });
       }
     )
     .get(
@@ -73,7 +73,7 @@ export default (app) => {
     )
     .post(
       resource,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'tasks/create', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const task = await app.objection.models.task.fromJson(req.body.task);
         try {
@@ -89,7 +89,7 @@ export default (app) => {
     )
     .patch(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'tasks/update', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
 
@@ -100,7 +100,7 @@ export default (app) => {
           req.flash('info', i18next.t('flash.task.edit.success'));
         } catch ({ data }) {
           req.flash('error', i18next.t('flash.errors.common'));
-          reply.redirect(app.reverse('tasks/info', { errors: data }));
+          reply.redirect(app.reverse('tasks/show', { errors: data }));
         }
 
         reply.redirect(app.reverse('tasks'));
@@ -108,7 +108,7 @@ export default (app) => {
     )
     .delete(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'tasks/delete', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const taskId = _.toNumber(req.params.id);
         const task = await tasksRepository.getById(taskId);

@@ -43,7 +43,7 @@ export default (app) => {
     )
     .post(
       resource,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'labels/create', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         try {
           await labelRepository.insert(req.body.label);
@@ -61,7 +61,7 @@ export default (app) => {
     )
     .patch(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'labels/update', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
         const { label } = req.body;
@@ -81,7 +81,7 @@ export default (app) => {
     )
     .delete(
       `${resource}/:id`,
-      { preHandler: app.auth([app.verifySignedIn]) },
+      { name: 'labels/delete', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const labelId = _.toNumber(req.params.id);
         try {

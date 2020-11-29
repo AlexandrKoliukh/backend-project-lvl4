@@ -1,5 +1,13 @@
 extends ../layouts/application.pug
 
+mixin filterSelect(entities, property, valueName, caption)
+    .col-auto
+        label(for='users')= caption
+        select#users.form-select(name=property)
+            option(value='null', selected= getFilterValue(property) === 'null')
+            for entity in entities
+                option(value=entity.id, selected= getFilterValue(property) == entity.id)= entity[valueName]
+
 block header
     div.text-center
         = t('views.task.table')
@@ -8,25 +16,10 @@ block content
     - const getFilterValue = (name) => _.get(filters, name, 'null')
     .container.bg-light.p-5.pt-4.rounded-lg
         h4.text-center= t('views.task.filter.filter')
-        form.row.gy-2.gx-3.align-items-end(action=route('tasks'), method='GET')
-            .col-auto
-                label(for='users')= t('views.task.executor')
-                select#users.form-select(name='executorId')
-                    option(value='null', selected= getFilterValue('executorId') === 'null')
-                    for user in users
-                        option(value=user.id, selected= getFilterValue('executorId') == user.id)= user.email
-            .col-auto
-                label(for='users')= t('views.task.labels')
-                select#labels.form-select(name='labelId')
-                    option(value='null', selected= getFilterValue('labelId') === 'null')
-                    for label in labels
-                      option(value=label.id, selected= getFilterValue('labelId') == label.id)= label.name
-            .col-auto
-                label(for='statuses')= t('views.task.status')
-                select#statuses.form-select(name="statusId")
-                    option(value='null', selected= getFilterValue('statusId') === 'null')
-                    for taskStatus in taskStatuses
-                      option(value=taskStatus.id, selected= getFilterValue('statusId') == taskStatus.id)= taskStatus.name
+        +form.row.gy-2.gx-3.align-items-end()(action=route('tasks'))
+            +filterSelect(users, 'executorId', 'email', t('views.task.executor'))
+            +filterSelect(labels, 'labelId', 'name', t('views.task.labels'))
+            +filterSelect(taskStatuses, 'statusId', 'name', t('views.task.status'))
             .col-auto.mt-3
                 .form-check
                     input#currentUser.form-check-input(
@@ -52,7 +45,7 @@ block content
           each task in tasks
               tr
                   td
-                    a(href=route('tasks/info', { id: task.id }))= task.name
+                    a(href=route('tasks/show', { id: task.id }))= task.name
                   td
                     for label in task.labels
                       .badge.bg-secondary.m-1= label.name

@@ -6,11 +6,6 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(method='post')
-            input(
-                name="_method"
-                type="hidden"
-                value='patch'
-            )
+        +form('patch')(action=route('taskStatuses/update', { id: taskStatus.id }))
             +input(taskStatus, 'name', errors)(required)
             +submit()(value=t('buttons.save'))

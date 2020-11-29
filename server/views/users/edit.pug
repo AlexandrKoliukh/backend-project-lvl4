@@ -5,12 +5,7 @@ block content
         .d-flex.flex-column
             h3.mb-3.font-weight-normal.text-center
                 = t('views.user.profile')
-            form(action=route('users/edit', { id: currUserId }), method='post')
-                input(
-                    name="_method"
-                    type="hidden"
-                    value='patch'
-                )
+            +form('patch')(action=route('users/update', { id: currUserId }))
                 each key in keys
                     +input(user, key, errors)(type='!{key}')
                 +input(user, 'password', errors)(name="password" type="password" placeholder=t('views.user.passwordPlaceholder'))
@@ -33,12 +28,6 @@ block content
                                 type='button'
                                 data-dismiss='modal'
                             )= t('buttons.cancel')
-                            form(method='post')
-                                input(
-                                    name="_method"
-                                    type="hidden"
-                                    value='DELETE'
-                                )
-                                button.btn.btn-danger(
-                                    type='submit'
-                                )=t('buttons.delete')
+                            +form('delete')(action=route('users/delete', { id: user.id }))
+                                +submit.btn-danger()(value=t('buttons.delete'))
+

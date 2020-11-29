@@ -6,7 +6,7 @@ block header
 
 block content
   div.w-50.mx-auto
-    +formFor()(action=route('session') method='post')
-      +input(signInForm, 'email', errors)(type="email", required="required")
-      +input(signInForm, 'password', errors)(type="password", required="required", minlength="3")
+    +form('post')(action=route('session'))
+      +input(signInForm, 'email', errors)(type="email", required)
+      +input(signInForm, 'password', errors)(type="password", required, minlength="3")
       +submit(signInForm)(value=t('views.session.new.submit'))

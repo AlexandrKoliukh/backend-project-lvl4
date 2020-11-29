@@ -6,7 +6,7 @@ block header
 
 block content
     div.w-50.mx-auto
-        form(action=route('tasks') method='post')
+        +form('post')(action=route('tasks/create'))
             .d-none
                 +input(task, 'creatorId', errors, currUserId)(type='hidden')
 

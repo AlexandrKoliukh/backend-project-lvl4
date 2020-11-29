@@ -34,12 +34,7 @@ block content
                     .container
                         h5.modal-title.text-center= t('views.label.delete')
                 .modal-body
-                    form(method='post', name='deleteLabel', action=route('labels'))
-                        input(
-                            name="_method"
-                            type="hidden"
-                            value='DELETE'
-                        )
+                    +form('delete')(name='deleteLabel', action=route('labels'))
                         .d-flex.justify-content-between
                             button.btn.btn-primary(
                                 type='button'
