@@ -29,6 +29,7 @@ describe('user crud', () => {
       method: 'GET',
       url: '/users',
     });
+
     expect(res.statusCode).toBe(200);
   });
 
@@ -44,9 +45,9 @@ describe('user crud', () => {
       id: createdUser.id,
     };
 
+    expect(res.statusCode).toBe(302);
     expect(createdUser.email).toEqual(testUser.email);
     expect(createdUser.passwordDigest).toEqual(encrypt(testUser.password));
-    expect(res.statusCode).toBe(302);
   });
 
   test('User PATCH', async () => {
@@ -71,8 +72,8 @@ describe('user crud', () => {
       email: updatedUser.email,
     };
 
-    expect(updatedUser.email).toEqual(newEmail);
     expect(res.statusCode).toBe(302);
+    expect(updatedUser.email).toEqual(newEmail);
   });
 
   test('User DELETE', async () => {
@@ -82,6 +83,7 @@ describe('user crud', () => {
     });
 
     const user = await Model.query().findOne({ email: testUser.email });
+
     expect(user).toBeUndefined();
   });
 });

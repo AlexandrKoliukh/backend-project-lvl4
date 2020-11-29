@@ -59,6 +59,7 @@ describe('task status crud', () => {
       url: '/task-statuses',
       cookies,
     });
+
     expect(res.statusCode).toBe(200);
   });
 
@@ -78,8 +79,8 @@ describe('task status crud', () => {
       id: createdTaskStatus.id,
     };
 
-    expect(createdTaskStatus.name).toEqual(testTaskStatus.name);
     expect(res.statusCode).toBe(302);
+    expect(createdTaskStatus.name).toEqual(testTaskStatus.name);
   });
 
   test('TaskStatus PATCH', async () => {
@@ -107,8 +108,8 @@ describe('task status crud', () => {
       name: updatedTaskStatus.name,
     };
 
-    expect(updatedTaskStatus.name).toEqual(newName);
     expect(res.statusCode).toBe(302);
+    expect(updatedTaskStatus.name).toEqual(newName);
   });
 
   test('TaskStatus DELETE', async () => {
@@ -119,6 +120,7 @@ describe('task status crud', () => {
     });
 
     const user = await Model.query().findOne({ name: testTaskStatus.name });
+
     expect(user).toBeUndefined();
   });
 });

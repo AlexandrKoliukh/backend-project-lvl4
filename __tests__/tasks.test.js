@@ -75,10 +75,10 @@ describe('task crud', () => {
       id: createdTask.id,
     };
 
+    expect(res.statusCode).toBe(302);
     expect(createdTask.name).toEqual(testTask.name);
     expect(createdTask.statusId).toEqual(testTask.statusId);
     expect(createdTask.creatorId).toEqual(testTask.creatorId);
-    expect(res.statusCode).toBe(302);
   });
 
   test('Task PATCH', async () => {
@@ -106,8 +106,8 @@ describe('task crud', () => {
       name: updatedTask.name,
     };
 
-    expect(updatedTask.name).toEqual(newName);
     expect(res.statusCode).toBe(302);
+    expect(updatedTask.name).toEqual(newName);
   });
 
   test('Task DELETE', async () => {
@@ -118,6 +118,7 @@ describe('task crud', () => {
     });
 
     const task = await Model.query().findOne({ name: testTask.name });
+
     expect(task).toBeUndefined();
   });
 });

@@ -78,8 +78,8 @@ describe('label crud', () => {
       id: createdLabel.id,
     };
 
-    expect(createdLabel.name).toEqual(testLabel.name);
     expect(res.statusCode).toBe(302);
+    expect(createdLabel.name).toEqual(testLabel.name);
   });
 
   test('Label PATCH', async () => {
@@ -107,8 +107,8 @@ describe('label crud', () => {
       name: updatedLabel.name,
     };
 
-    expect(updatedLabel.name).toEqual(newName);
     expect(res.statusCode).toBe(302);
+    expect(updatedLabel.name).toEqual(newName);
   });
 
   test('Label DELETE', async () => {
@@ -119,6 +119,7 @@ describe('label crud', () => {
     });
 
     const user = await Model.query().findOne({ name: testLabel.name });
+
     expect(user).toBeUndefined();
   });
 });
