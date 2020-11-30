@@ -1,16 +1,20 @@
 // @ts-check
 
-import app from '../server/index.js';
+import getApp from '../server/index.js';
 
 describe('requests', () => {
-  let server;
+  let app;
 
   beforeAll(() => {
-    server = app();
+    app = getApp();
+  });
+
+  afterAll(() => {
+    app.close();
   });
 
   it('GET 200', async () => {
-    const res = await server.inject({
+    const res = await app.inject({
       method: 'GET',
       url: '/',
     });
@@ -18,14 +22,21 @@ describe('requests', () => {
   });
 
   it('GET 404', async () => {
-    const res = await server.inject({
+    const res = await app.inject({
       method: 'GET',
       url: '/wrong-path',
     });
     expect(res.statusCode).toBe(404);
   });
 
-  afterAll(() => {
-    server.close();
-  });
+  test.each(['tasks', 'labels', 'taskStatuses'])(
+    'GET 302 %s',
+    async (route) => {
+      const res = await app.inject({
+        method: 'GET',
+        url: app.reverse(route),
+      });
+      expect(res.statusCode).toBe(302);
+    }
+  );
 });

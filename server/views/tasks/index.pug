@@ -16,7 +16,7 @@ block content
     - const getFilterValue = (name) => _.get(filters, name, 'null')
     .container.bg-light.p-5.pt-4.rounded-lg
         h4.text-center= t('views.task.filter.filter')
-        +form.row.gy-2.gx-3.align-items-end()(action=route('tasks'))
+        +form().row.gy-2.gx-3.align-items-end(action=route('tasks'))
             +filterSelect(users, 'executorId', 'email', t('views.task.executor'))
             +filterSelect(labels, 'labelId', 'name', t('views.task.labels'))
             +filterSelect(taskStatuses, 'statusId', 'name', t('views.task.status'))

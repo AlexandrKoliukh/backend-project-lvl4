@@ -1,89 +1,80 @@
 // @ts-check
 
-import _ from 'lodash';
-import app from '../server/index.js';
 import encrypt from '../server/lib/secure.js';
-import { testUser as initTestUser } from '../__fixtures__/user';
+import { getUser } from '../__fixtures__/entitiesData';
+import getApp from '../server';
 
-describe('user crud', () => {
-  let server;
+describe('USERS', () => {
   let testUser;
   let Model;
+  let app;
 
-  beforeAll(async () => {
-    server = await app();
-    await server.objection.knex.migrate.latest();
-    await server.objection.knex.seed.run();
+  beforeEach(async () => {
+    app = await getApp();
+    await app.objection.knex.migrate.latest();
 
-    testUser = _.cloneDeep(initTestUser);
-
-    Model = server.objection.models.user;
+    Model = app.objection.models.user;
+    testUser = getUser();
   });
 
-  afterAll(() => {
-    server.close();
+  afterEach(() => {
+    app.close();
   });
 
-  test('User GET', async () => {
-    const res = await server.inject({
+  test(`GET users`, async () => {
+    const res = await app.inject({
       method: 'GET',
-      url: '/users',
+      url: app.reverse('users'),
     });
-
     expect(res.statusCode).toBe(200);
   });
 
-  test('User POST', async () => {
-    const res = await server.inject({
+  test(`POST users`, async () => {
+    const res = await app.inject({
       method: 'POST',
-      url: '/users',
+      url: app.reverse('users/create'),
       payload: { user: testUser },
     });
     const createdUser = await Model.query().findOne({ email: testUser.email });
-    testUser = {
-      ...testUser,
-      id: createdUser.id,
-    };
 
     expect(res.statusCode).toBe(302);
     expect(createdUser.email).toEqual(testUser.email);
     expect(createdUser.passwordDigest).toEqual(encrypt(testUser.password));
   });
 
-  test('User PATCH', async () => {
-    const newEmail = `TEST_${testUser.email}`;
-    const newUser = Model.fromJson({
-      ...testUser,
-      email: newEmail,
-    });
-
-    const res = await server.inject({
+  test(`PATCH users`, async () => {
+    const inserted = await Model.query().insert(testUser);
+    const newKey = `TEST_${inserted.email}`;
+    const newData = {
+      ...inserted,
+      email: newKey,
+    };
+    const res = await app.inject({
       method: 'PATCH',
-      url: `/users/${testUser.id}`,
+      url: app.reverse(`users/update`, { id: inserted.id }),
       payload: {
-        user: newUser,
+        user: newData,
+        password: '123',
       },
     });
 
-    const updatedUser = await Model.query().findOne({ id: testUser.id });
-
-    testUser = {
-      ...testUser,
-      email: updatedUser.email,
-    };
-
-    expect(res.statusCode).toBe(302);
-    expect(updatedUser.email).toEqual(newEmail);
-  });
-
-  test('User DELETE', async () => {
-    await server.inject({
-      method: 'delete',
-      url: `/users/${testUser.id}`,
+    const updated = await Model.query().findOne({
+      id: inserted.id,
     });
 
-    const user = await Model.query().findOne({ email: testUser.email });
+    expect(res.statusCode).toBe(302);
+    expect(updated.email).toEqual(newData.email);
+    expect(updated.passwordDigest).toEqual(encrypt('123'));
+  });
 
-    expect(user).toBeUndefined();
+  test(`DELETE users`, async () => {
+    const inserted = await Model.query().insert(testUser);
+    await app.inject({
+      method: 'delete',
+      url: app.reverse(`users/delete`, { id: inserted.id }),
+    });
+    const deleted = await Model.query().findOne({ id: inserted.id });
+
+    expect(deleted).toBeUndefined();
   });
 });

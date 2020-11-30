@@ -28,9 +28,6 @@ module.exports = {
     client: 'sqlite3',
     connection: ':memory:',
     debug: false,
-    seeds: {
-      directory: path.resolve('server', 'seeds'),
-    },
     ...common,
   },
   production: {
