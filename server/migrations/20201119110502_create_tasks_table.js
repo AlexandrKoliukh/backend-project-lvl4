@@ -10,19 +10,22 @@ exports.up = (knex) =>
       .unsigned()
       .references('id')
       .inTable('task_statuses')
-      .index();
+      .index()
+      .onDelete('SET NULL');
     table
       .integer('executor_id')
       .unsigned()
       .references('id')
       .inTable('users')
-      .index();
+      .index()
+      .onDelete('SET NULL');
     table
       .integer('creator_id')
       .unsigned()
       .references('id')
       .inTable('users')
-      .index();
+      .index()
+      .onDelete('SET NULL');
   });
 
 exports.down = (knex) => knex.schema.dropTable('tasks');
