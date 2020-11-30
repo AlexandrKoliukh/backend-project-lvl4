@@ -38,9 +38,15 @@ const tests = [
     findKey: 'name',
     fakeData: getTask(),
   },
-];
+].map((i) =>
+  Object.assign(i, {
+    toString() {
+      return i.routesName;
+    },
+  })
+);
 
-describe.each(tests)('%j', (testProps) => {
+describe.each(tests)('CRUD %s', (testProps) => {
   beforeEach(async () => {
     app = await getApp();
     await app.objection.knex.migrate.latest();
