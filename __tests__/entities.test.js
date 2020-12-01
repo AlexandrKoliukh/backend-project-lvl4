@@ -11,7 +11,7 @@ import {
 
 let app;
 let Model;
-let cookies;
+let cookies = {};
 
 const tests = [
   {
@@ -62,12 +62,13 @@ describe.each(tests)('CRUD %s', (testProps) => {
     await app
       .inject({
         method: 'POST',
-        url: '/session',
+        url: app.reverse('session'),
         payload: { user: authUser },
       })
       .then((res) => {
         const sessionCookie = _.find(res.cookies, { name: 'session' });
         cookies = {
+          ...cookies,
           [sessionCookie.name]: sessionCookie.value,
         };
       });
@@ -81,6 +82,25 @@ describe.each(tests)('CRUD %s', (testProps) => {
     const res = await app.inject({
       method: 'GET',
       url: app.reverse(testProps.routesName),
+      cookies,
+    });
+    expect(res.statusCode).toBe(200);
+  });
+
+  test(`GET ${testProps.routesName} edit page `, async () => {
+    const inserted = await Model.query().insert(testProps.fakeData);
+    const res = await app.inject({
+      method: 'GET',
+      url: app.reverse(`${testProps.routesName}/edit`, { id: inserted.id }),
+      cookies,
+    });
+    expect(res.statusCode).toBe(200);
+  });
+
+  test(`GET ${testProps.routesName} new page `, async () => {
+    const res = await app.inject({
+      method: 'GET',
+      url: app.reverse(`${testProps.routesName}/new`),
       cookies,
     });
     expect(res.statusCode).toBe(200);
