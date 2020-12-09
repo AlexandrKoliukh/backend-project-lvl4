@@ -7,7 +7,7 @@
 
 ## Demo
 
-https://alk-tasks.herokuapp.com/
+https://alk-tasks.herokuapp.com/ (VPN)
 
 ## Setup
 
