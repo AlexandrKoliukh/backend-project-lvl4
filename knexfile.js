@@ -4,7 +4,7 @@ const path = require('path');
 const { knexSnakeCaseMappers } = require('objection');
 
 const migrations = {
-  directory: path.resolve('server', 'migrations'),
+  directory: path.join(__dirname, 'migrations'),
 };
 
 const common = {
@@ -20,7 +20,7 @@ module.exports = {
       filename: './database.sqlite',
     },
     seeds: {
-      directory: path.resolve('server', 'seeds'),
+      directory: path.join(__dirname, 'seeds'),
     },
     ...common,
   },
