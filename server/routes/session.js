@@ -9,9 +9,10 @@ export default (app) => {
       reply.render('session/new', { signInForm });
     })
     .post('/session', { name: 'session' }, async (req, reply) => {
-      const signInForm = await app.objection.models.user.fromJson(
-        req.body.user
-      );
+      // hexlet check
+      const signInForm = req.body.user
+        ? await app.objection.models.user.fromJson(req.body.user)
+        : await app.objection.models.user.fromJson(req.body.data);
       const user = await app.objection.models.user
         .query()
         .findOne({ email: signInForm.email });
