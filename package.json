@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "Simple task manager",
-  "main": "",
+  "main": "server/index.js",
   "engines": {
     "node": "14.x"
   },
