@@ -64,9 +64,9 @@ export default (app) => {
       { name: 'tasks/new', preHandler: app.auth([app.verifySignedIn]) },
       async (req, reply) => {
         const task = new app.objection.models.task();
-        const users = await app.objection.models.user.query();
-        const taskStatuses = await app.objection.models.taskStatus.query();
-        const labels = await app.objection.models.label.query();
+        const users = await usersRepository.getAll();
+        const taskStatuses = await taskStatusesRepository.getAll();
+        const labels = await labelsRepository.getAll();
 
         reply.render('tasks/new', { task, users, taskStatuses, labels });
       }
