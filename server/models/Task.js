@@ -44,7 +44,7 @@ export default class Task extends BaseModel {
   static get relationMappings() {
     return {
       status: {
-        relation: BaseModel.HasOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: 'TaskStatus',
         join: {
           from: 'tasks.statusId',
@@ -52,7 +52,7 @@ export default class Task extends BaseModel {
         },
       },
       creator: {
-        relation: BaseModel.HasOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: 'User',
         join: {
           from: 'tasks.creatorId',
@@ -60,7 +60,7 @@ export default class Task extends BaseModel {
         },
       },
       executor: {
-        relation: BaseModel.HasOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: 'User',
         join: {
           from: 'tasks.executorId',
